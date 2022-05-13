@@ -1,0 +1,8 @@
+V1 roadmap:
+-add easy way to tell and navigate to places where the have written code
+-easy toggle on off from popup menu
+-put cursor at correct position after pasting
+
+
+V2 roadmap:
+-list of themes

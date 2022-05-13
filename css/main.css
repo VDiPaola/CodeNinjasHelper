@@ -1,0 +1,32 @@
+.CodeNinjasHelper{
+    height: auto;
+    position: absolute;
+    background-color: rgb(56, 56, 56);
+    z-index: 100000;
+    display: none;
+    max-width: 20vw;
+    max-height: 20vh;
+    overflow-y: auto;
+}
+
+.CodeNinjasHelper > div{
+    color:red;
+    display: flex;
+    width: 100%;
+    overflow: hidden;
+}
+
+.CodeNinjasHelper > div > span{
+    color:gray;
+    pointer-events: none
+}
+.CodeNinjasHelper > div > span:first-child{
+    color:rgb(214, 134, 28);
+    margin-right: 5px;
+}
+
+
+.CodeNinjasHelper > div:hover{
+    background-color: rgb(44, 44, 44);
+    cursor: pointer;
+}

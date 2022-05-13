@@ -1,0 +1,36 @@
+{
+    "manifest_version": 3,
+    "name": "Code Ninjas Helper",
+    "version": "1.0.0",
+    "description": "",
+    "icons":{
+        "128": "icon128.png",
+        "48": "icon48.png",
+        "16": "icon16.png"
+    },
+
+    "permissions": [
+        "tabs",
+        "contextMenus",
+        "activeTab",
+        "scripting"
+    ],
+
+    "background":{
+        "service_worker":"./js/background.js"
+    },
+
+    "content_scripts": [{
+        "matches":    ["*://*/*"],
+        "js":         ["./js/content.js"]
+    },{
+        "css": [ "./css/main.css" ],
+        "matches":    ["*://*/*"]
+     } ],
+
+     "host_permissions": [
+        "https://gdp.code.ninja/*"
+    ]
+
+
+}
