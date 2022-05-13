@@ -1,28 +1,68 @@
-class CodeNinjasHelper {
-    constructor(){
-        this.sendMessage({message: "onChange"});
-    }
+const Dictionary = {
+    "if": "if () {\n\t\n}",
+	"else": "else {\n\t\n}",
+	"function": "function name() {\n\t\n}",
+}
 
+class Editor {
     setTheme(theme) {
         this.sendMessage({message: "setTheme", value: theme});
     }
 
-    appendText(text){
-        this.sendMessage({message: "appendText", value: text});
+    setValue(text, position, resetUndoHistory=false){
+        this.sendMessage({message: "setValue", value: text, position, resetUndoHistory});
     }
 
-    sendMessage(data){
+    insertText(text){
+        this.sendMessage({message: "insertText", value: text});
+    }
+
+    setFontSize(fontSize){
+        this.sendMessage({message: "setFontSize", value: fontSize});
+    }
+
+    setTabSize(tabSize){
+        this.sendMessage({message: "setTabSize", value: tabSize});
+    }
+
+    replaceInRange(value, startRow, startColumn, endRow, endColumn){
+        this.sendMessage({message: "replaceInRange", value, startRow, startColumn, endRow, endColumn});
+    }
+
+    moveCursorTo(row, column){
+        this.sendMessage({message: "moveCursorTo", value: row, column});
+    }
+
+    intellisenseCheck(){
+        this.sendMessage({message: "intellisenseCheck", value: Dictionary});
+    }
+
+    async getCurrentLine(){
+        return await this.sendMessage({message: "getCurrentLine"});
+    }
+
+    async getCursor(){
+        return await this.sendMessage({message: "getCursor"});
+    }
+
+    async sendMessage(data){
         data = {type:"ace", ...data};
-        chrome.runtime.sendMessage(data);
+        return await chrome.runtime.sendMessage(data)
     }
 }
 
 
 window.onload = () => {
-    waitForElm(".ace_text-input").then(() => {
-        const codeNinjasHelper = new CodeNinjasHelper();
-        codeNinjasHelper.setTheme("ace/theme/twilight");
-        codeNinjasHelper.appendText("Hello World");
+    waitForElement(".ace_text-input").then(() => {
+        const editor = new Editor();
+        editor.setTheme("ace/theme/twilight");
+
+        window.addEventListener("keydown", function(e){
+            const el = e.target;
+            if(el.tagName == "TEXTAREA" || el.tagName == "INPUT"){
+                editor.intellisenseCheck();
+            }
+        })
     })   
 }
 
@@ -30,13 +70,13 @@ window.onload = () => {
 
 
 //waits for selected element to load
-function waitForElm(selector) {
+function waitForElement(selector) {
     return new Promise(resolve => {
         if (document.querySelector(selector)) {
             return resolve(document.querySelector(selector));
         }
 
-        const observer = new MutationObserver(mutations => {
+        const observer = new MutationObserver(_ => {
             if (document.querySelector(selector)) {
                 resolve(document.querySelector(selector));
                 observer.disconnect();
