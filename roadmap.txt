@@ -1,10 +1,4 @@
-V1 roadmap(deprecated):
--add easy way to tell and navigate to places where the have written code
--easy toggle on off from popup menu
--put cursor at correct position after pasting
-
-
-V2 roadmap:
+roadmap:
 -list of themes in context menu or popup
 -custom font size buttons
 -popup with toggle on/off button
