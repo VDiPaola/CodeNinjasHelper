@@ -1,72 +1,179 @@
 const Dictionary = {
-    "if": "if () {\n\t\n}",
-	"else": "else {\n\t\n}",
-	"function": "function name() {\n\t\n}",
+    "if": "if () {\n[cursor]\n}",
+	"else": "else {\n[cursor]\n}",
+	"function": "function name() {\n[cursor]\n}",
 }
-
+const tags = ["[cursor]"]
 class Editor {
-    setTheme(theme) {
+    static setTheme(theme) {
         this.sendMessage({message: "setTheme", value: theme});
     }
 
-    setValue(text, position, resetUndoHistory=false){
+    static setValue(text, position, resetUndoHistory=false){
         this.sendMessage({message: "setValue", value: text, position, resetUndoHistory});
     }
 
-    insertText(text){
-        this.sendMessage({message: "insertText", value: text});
+    static async insertText(text){
+        return await this.sendMessage({message: "insertText", value: text});
     }
 
-    setFontSize(fontSize){
+    static setFontSize(fontSize){
         this.sendMessage({message: "setFontSize", value: fontSize});
     }
 
-    setTabSize(tabSize){
+    static setTabSize(tabSize){
         this.sendMessage({message: "setTabSize", value: tabSize});
     }
 
-    replaceInRange(value, startRow, startColumn, endRow, endColumn){
+    static replaceInRange(value, startRow, startColumn, endRow, endColumn){
         this.sendMessage({message: "replaceInRange", value, startRow, startColumn, endRow, endColumn});
     }
 
-    moveCursorTo(row, column){
+    static moveCursorTo(row, column){
         this.sendMessage({message: "moveCursorTo", value: row, column});
     }
 
-    intellisenseCheck(){
-        this.sendMessage({message: "intellisenseCheck", value: Dictionary});
+    static async getIntellisenseData(){
+        return await this.sendMessage({message: "getIntellisenseData"});
     }
 
-    async getCurrentLine(){
+    static async getCurrentLine(){
         return await this.sendMessage({message: "getCurrentLine"});
     }
 
-    async getCursor(){
+    static async getCurrentWord(){
+        return await this.sendMessage({message: "getCurrentWord"});
+    }
+
+    static async getCursor(){
         return await this.sendMessage({message: "getCursor"});
     }
 
-    async sendMessage(data){
+    static async sendMessage(data){
         data = {type:"ace", ...data};
         return await chrome.runtime.sendMessage(data)
     }
 }
 
+class Intellisense {
+    constructor(){
+        //create container div
+        this.container = document.createElement("div");
+        this.container.className = "CodeNinjasHelper";
+        document.body.appendChild(this.container);
+
+        //get offset position of the editor
+        const rect = document.getElementsByClassName("ace_text-input")[0].getBoundingClientRect();
+		this.offsetX = rect.x;
+		this.offsetY = rect.top;
+    }
+
+    show(cursorPos, textAreaEl){
+        //position container
+        const rect = textAreaEl.getBoundingClientRect();
+        this.container.style.top = ((cursorPos.row + 1) * rect.height) + this.offsetY + "px";
+        this.container.style.left = ((cursorPos.column) * rect.width) + this.offsetX + "px";
+        //show
+        this.container.style.display = "flex";
+    }
+
+    hide(){
+        //clear and hide div
+        this.container.innerHTML = "";
+        this.container.style.display = "none";
+    }
+
+    isVisible(){
+        return this.container.style.display !== "none";
+    }
+
+    check = (curWord, cursorPos, textAreaEl) => {
+        
+        //lookup word in dictionary
+        if(Dictionary.hasOwnProperty(curWord)){
+            //append
+            this.append(curWord);
+            //show
+            this.show(cursorPos, textAreaEl);
+        }
+    }
+
+    append = (key) => {
+        //create intellisense entry
+        let newDiv = document.createElement("div");
+        let newSpan = document.createElement("span");
+        let newSpan2 = document.createElement("span");
+
+        newSpan.textContent = key;
+        newSpan2.textContent = this.filterDictValue(Dictionary[key]);
+        newDiv.appendChild(newSpan);
+        newDiv.appendChild(newSpan2);
+
+        newDiv.setAttribute("value", key);
+
+        newDiv.addEventListener("click", (e)=>{this.submit(e.target)});
+
+        this.container.appendChild(newDiv);
+    }
+
+    filterDictValue = (value) => {
+        let returnValue = value;
+        for(let tag of tags){
+            returnValue = returnValue.replace(tag, "");
+        }
+        return returnValue;
+    }
+
+
+    submit = (el) => {
+        //insert text in editor
+        const key = el.getAttribute("value");
+        let text = Dictionary[key];
+
+        if(text){
+            //get text without key in it
+	        text = text.slice(key.length);
+            Editor.insertText(text).then(res=>console.log(res))
+        }
+        
+        //hide
+        this.hide();
+    }
+
+}
+
 
 window.onload = () => {
+    //wait for editor to load
     waitForElement(".ace_text-input").then(() => {
-        const editor = new Editor();
-        editor.setTheme("ace/theme/twilight");
+        //setup objects
+        const intellisense = new Intellisense();
+        Editor.setTheme("ace/theme/twilight");
+
+        window.addEventListener("click", ()=>{
+            Editor.getCursor().then(res => console.log(res));
+        })
 
         window.addEventListener("keydown", function(e){
             const el = e.target;
-            if(el.tagName == "TEXTAREA" || el.tagName == "INPUT"){
-                editor.intellisenseCheck();
+
+            //check for enter press
+            if(e.code == "Enter" && intellisense.isVisible() && intellisense.container.children.length > 0){
+                //insert intellisense if available
+                e.preventDefault();
+                intellisense.submit(intellisense.container.children[0]);
+            }else if(el.tagName == "TEXTAREA" || el.tagName == "INPUT"){
+                //check for intellisense
+                intellisense.hide();
+                Editor.getIntellisenseData().then(({curWord, cursorPos}) => {
+                    if(curWord && cursorPos){
+                        intellisense.check(curWord, cursorPos, el);
+                    }
+                })
             }
         })
     })   
 }
-
-
 
 
 //waits for selected element to load

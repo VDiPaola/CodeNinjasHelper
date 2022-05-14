@@ -19,11 +19,60 @@ function setValue(value, cursorPosition, resetUndoHistory=false){
 }
 
 function insertText(value){
-  //insert text as if user typed it
+  //inserts text as if user typed it
   const ace = window.ace
   const editor = ace.edit("ws");
 
-  editor.insert(value);
+  //get how many tabs at start of current line
+  const tabChar = editor.session.getTabString();
+  const tabSize = editor.session.getTabSize();
+  //get current line and split by tabs
+  const unsplitLine = editor.session.getLine(editor.selection.getCursor().row);
+  const splitLine = unsplitLine.split(tabChar);
+  //count how many tabs there are
+  let tabCounter = 0
+  for(let word of splitLine){
+    if(word === ""){
+      tabCounter++
+    }else{
+      break;
+    }
+  }
+
+  //insert text with correct indentation
+  const lines = value.split("\n");
+  let cursorCol = 0;
+  let cursorRow = 0;
+  lines.forEach((line, index) => {
+    line = line.replace("[tab]", tabChar);
+
+    if(line.includes("[cursor]")) {
+      //get cursor position and remove from string
+      cursorCol = line.indexOf("[cursor]");
+      if(index === 0) {cursorCol += unsplitLine.length;}
+      else{cursorCol += tabCounter * tabSize;}
+      cursorRow = lines.length - 2 - index;
+      line = line.replace("[cursor]", "");
+    }
+
+    //insert text
+    if(index === 0){
+      editor.insert(line);
+    }else{
+      //editor.insert("\n" + tabChar.repeat(tabCounter) + line);
+      editor.insert("\n");
+      // for(let i=0; i<tabCounter; i++){
+      //   editor.indent();
+      // }
+      editor.insert(line);
+    }
+  });
+
+  //set cursor position
+  const cursorLine = editor.selection.getCursor().row - cursorRow;
+  editor.gotoLine(cursorLine, cursorCol, true);
+  
+  
 }
 
 function getAllText(){
@@ -65,20 +114,21 @@ function setFontSize(fontSize){
   editor.setFontSize(fontSize);
 }
 
-function intellisenseCheck(dictionary){
+function getIntellisenseData(){
+  //returns current word and cursor position
   const ace = window.ace
   const editor = ace.edit("ws");
   const Range = require('ace/range').Range;
   const range = editor.selection.getCursor();
   //get current line up to cursor
   const line = editor.session.getTextRange(new Range(range.row, 0, range.row, range.column));
-  //get current word
-  const word = line.slice(line.lastIndexOf(" ") + 1);
-  //check if word is in dictionary keys
-  if(dictionary.hasOwnProperty(word)){
-    //insert value
-    editor.insert(dictionary[word]);
-  }
+  //get current word without tabs
+  const tab = editor.session.getTabString();
+  const curWord = line.slice(line.lastIndexOf(" ") + 1).trim();
+  const cursorPos = editor.selection.getCursor();
+
+  return {curWord, cursorPos};
+  
 }
 
 function getCurrentLine(){
@@ -98,8 +148,9 @@ function getCurrentWord(){
   const range = editor.selection.getCursor();
   //get current line up to cursor
   const line = editor.session.getTextRange(new Range(range.row, 0, range.row, range.column));
-  //get current word
-  return line.slice(line.lastIndexOf(" ") + 1);
+  //get current word without tabs
+  const tab = editor.session.getTabString();
+  return line.slice(line.lastIndexOf(" ") + 1).trim();
 }
 
 function onChange(){
@@ -200,8 +251,8 @@ chrome.runtime.onMessage.addListener((data, sender, sendResponse) => {
           case "moveCursorTo":
             execScript(tab.id, moveCursorTo, [data.row, data.column]).then(send);
             break;
-          case "intellisenseCheck":
-            execScript(tab.id, intellisenseCheck, [data.value]).then(send);
+          case "getIntellisenseData":
+            execScript(tab.id, getIntellisenseData).then(send);
             break;
           case "getCurrentLine":
             execScript(tab.id, getCurrentLine).then(send);

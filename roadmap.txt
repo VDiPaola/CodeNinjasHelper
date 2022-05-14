@@ -13,6 +13,9 @@ V2 roadmap:
 -use tokenizer to create custom highlighting rules
 -show clear error when there is an uneven number of brackets
 -behaviours toggle maybe
+-can move from intellisense selections with arrows that work with enter
+-move cursor to right place after pasting
+-bracket colourise
 
 
 
@@ -24,15 +27,11 @@ Splits the line at the current selection (by inserting an '\n').
 moveLinesDown() ->  Number
 Shifts all the selected lines down one row.
 
-moveLinesUp() -> Number
-Shifts all the selected lines up one row.
-
 navigateWordLeft()
 Moves the cursor to the word immediately to the left of the current position. Note that this does de-select the current selection.
 
-navigateWordRight()
-Moves the cursor to the word immediately to the right of the current position. Note that this does de-select the current selection.
-
-
 setBehavioursEnabled(Boolean enabled)
 Specifies whether to use behaviors or not. "Behaviors" in this case is the auto-pairing of special characters, like quotation marks, parenthesis, or brackets.
+
+jumpToMatching(Object select)
+Moves the cursor's row and column to the next matching bracket.
