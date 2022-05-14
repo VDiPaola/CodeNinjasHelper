@@ -50,7 +50,8 @@ function insertText(value){
       //get cursor position and remove from string
       cursorCol = line.indexOf("[cursor]");
       if(index === 0) {cursorCol += unsplitLine.length;}
-      else{cursorCol += tabCounter * tabSize;}
+      //adds 1 assumes it needs to tab out (fix this)
+      else{cursorCol += (tabCounter+1) * tabSize;}
       cursorRow = lines.length - 2 - index;
       line = line.replace("[cursor]", "");
     }
@@ -59,11 +60,7 @@ function insertText(value){
     if(index === 0){
       editor.insert(line);
     }else{
-      //editor.insert("\n" + tabChar.repeat(tabCounter) + line);
       editor.insert("\n");
-      // for(let i=0; i<tabCounter; i++){
-      //   editor.indent();
-      // }
       editor.insert(line);
     }
   });
