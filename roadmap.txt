@@ -5,17 +5,18 @@ V1 roadmap(deprecated):
 
 
 V2 roadmap:
--list of themes in context menu
+-list of themes in context menu or popup
 -custom font size buttons
 -popup with toggle on/off button
 -way to toggle word-wrap
 -add little search bar (good to work for all edit sessions)
 -use tokenizer to create custom highlighting rules
--show clear error when there is an uneven number of brackets
--behaviours toggle maybe
--can move from intellisense selections with arrows that work with enter
--move cursor to right place after pasting
--bracket colourise
+-show clear error when there is an uneven number of brackets / bracket colourise
+-auto save feature (+ fail-safe save on redirect)
+-reselect the parent object when adding an asset
+-have button to center (maybe other floats) objects for the scene
+-when add asset center automatically
+-embed end of belt quiz
 
 
 
