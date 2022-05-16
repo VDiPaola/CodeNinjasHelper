@@ -7,6 +7,15 @@ const Dictionary = {
 }
 const tags = ["[cursor]"]
 class Editor {
+
+    static init(){
+        this.sendMessage({message: "init"});
+    }
+
+    static setCommandBindingsOn(value){
+        this.sendMessage({message: "setCommandBindingsOn", value:value});
+    }
+
     static setTheme(theme) {
         this.sendMessage({message: "setTheme", value: theme});
     }
@@ -105,6 +114,8 @@ class Intellisense {
         this.container.style.left = ((cursorPos.column) * rect.width) + this.offsetX + "px";
         //show
         this.container.style.display = "flex";
+
+        Editor.setCommandBindingsOn(false);
     }
 
     hide(){
@@ -113,6 +124,8 @@ class Intellisense {
         this.container.style.display = "none";
         //reset selected
         this.currentlySelectedIndex = 0;
+        
+        Editor.setCommandBindingsOn(true);
     }
 
     isVisible(){
@@ -198,6 +211,7 @@ window.onload = () => {
     waitForElement(".ace_text-input").then((textInputElement) => {
         //setup objects
         const intellisense = new Intellisense();
+        Editor.init();
         Editor.setTheme("ace/theme/twilight");
 
         textInputElement.addEventListener("keydown", function(e){
