@@ -1,21 +1,5 @@
-roadmap:
--list of themes in context menu or popup
--custom font size buttons
--popup with toggle on/off button
--way to toggle word-wrap
--add little search bar (good to work for all edit sessions)
--use tokenizer to create custom highlighting rules
--show clear error when there is an uneven number of brackets / bracket colourise
--auto save feature (+ fail-safe save on redirect)
--reselect the parent object when adding an asset
--have button to center (maybe other floats) objects for the scene
--when add asset center automatically
--embed end of belt quiz
+editor.setOptions({ enableBasicAutocompletion: true, enableLiveAutocompletion: true });
 
-
-
-
-//useful from docs
 splitLine()
 Splits the line at the current selection (by inserting an '\n').
 

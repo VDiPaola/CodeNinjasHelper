@@ -1,12 +1,20 @@
+:root{
+    --unselected-bg-color: rgb(56, 56, 56);
+    --selection-bg-color: rgb(44, 44, 44);
+}
+
+
 .CodeNinjasHelper{
     height: auto;
     position: absolute;
-    background-color: rgb(56, 56, 56);
+    background-color: var(--unselected-bg-color);
     z-index: 100000;
     display: none;
     max-width: 20vw;
     max-height: 20vh;
     overflow-y: auto;
+    overflow-x: hidden;
+    flex-direction: column;
 }
 
 .CodeNinjasHelper > div{
@@ -26,7 +34,7 @@
 }
 
 
-.CodeNinjasHelper > div:hover{
-    background-color: rgb(44, 44, 44);
+.CodeNinjasHelper > div.selected{
+    background-color: var(--selection-bg-color);
     cursor: pointer;
 }

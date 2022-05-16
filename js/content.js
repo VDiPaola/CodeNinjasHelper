@@ -1,7 +1,9 @@
 const Dictionary = {
-    "if": "if () {\n[cursor]\n}",
+    "if": "if ([cursor]) {\n\n}",
 	"else": "else {\n[cursor]\n}",
-	"function": "function name() {\n[cursor]\n}",
+	"function": "function [cursor]() {\n\n}",
+    "for": "for ([cursor]) {\n\n}",
+    "isKeyPressed":"isKeyPressed([cursor])",
 }
 const tags = ["[cursor]"]
 class Editor {
@@ -66,6 +68,34 @@ class Intellisense {
         const rect = document.getElementsByClassName("ace_text-input")[0].getBoundingClientRect();
 		this.offsetX = rect.x;
 		this.offsetY = rect.top;
+
+        
+        this.caseSensitive = false; //case sensitive for checking intellisense
+        this.currentlySelectedKey = null; //currently selected Dictionary key
+        this.currentlySelectedIndex = 0;
+    }
+
+    onUpArrow(){
+        if(this.currentlySelectedIndex > 0){
+            this.currentlySelectedIndex--;
+            this.updateSelected();
+        }
+    }
+
+    onDownArrow(){
+        if(this.currentlySelectedIndex < this.container.children.length - 1){
+            this.currentlySelectedIndex++;
+            this.updateSelected();
+        }
+    }
+
+    updateSelected(){
+        //clear all selected
+        for(let i = 0; i < this.container.children.length; i++){
+            this.container.children[i].classList.remove("selected");
+        }
+        //select current
+        this.container.children[this.currentlySelectedIndex].classList.add("selected");
     }
 
     show(cursorPos, textAreaEl){
@@ -88,17 +118,21 @@ class Intellisense {
     }
 
     check = (curWord, cursorPos, textAreaEl) => {
-        
+        this.hide();
+
         //lookup word in dictionary
-        if(Dictionary.hasOwnProperty(curWord)){
-            //append
-            this.append(curWord);
-            //show
-            this.show(cursorPos, textAreaEl);
+        const keys = Object.keys(Dictionary);
+        for(let key of keys){
+            let startsWith = this.caseSensitive ? key.startsWith(curWord) : key.toLowerCase().startsWith(curWord.toLowerCase());
+            if(startsWith){
+                this.append(key, curWord.length, textAreaEl);
+            }
         }
+
+        this.show(cursorPos, textAreaEl);
     }
 
-    append = (key) => {
+    append = (key, inputLength, textAreaEl) => {
         //create intellisense entry
         let newDiv = document.createElement("div");
         let newSpan = document.createElement("span");
@@ -110,8 +144,18 @@ class Intellisense {
         newDiv.appendChild(newSpan2);
 
         newDiv.setAttribute("value", key);
+        newDiv.setAttribute("inputLength", inputLength);
 
-        newDiv.addEventListener("click", (e)=>{this.submit(e.target)});
+        //submit on click
+        newDiv.addEventListener("click", (e)=>{
+            this.submit(e.target)
+            textAreaEl.focus();
+        });
+        //select on hover
+        newDiv.addEventListener("mouseover", (e)=>{
+            this.currentlySelectedIndex = [...e.target.parentElement.children].indexOf(e.target);
+            this.updateSelected();
+        });
 
         this.container.appendChild(newDiv);
     }
@@ -132,8 +176,9 @@ class Intellisense {
 
         if(text){
             //get text without key in it
-	        text = text.slice(key.length);
-            Editor.insertText(text).then(res=>console.log(res))
+            const inputLength = parseInt(el.getAttribute("inputLength"));
+	        text = text.slice(inputLength);
+            Editor.insertText(text)
         }
         
         //hide
@@ -150,26 +195,26 @@ window.onload = () => {
         const intellisense = new Intellisense();
         Editor.setTheme("ace/theme/twilight");
 
-        window.addEventListener("click", ()=>{
-            Editor.getCursor().then(res => console.log(res));
-        })
-
         window.addEventListener("keydown", function(e){
             const el = e.target;
 
-            //check for enter press
-            if(e.code == "Enter" && intellisense.isVisible() && intellisense.container.children.length > 0){
-                //insert intellisense if available
-                e.preventDefault();
-                intellisense.submit(intellisense.container.children[0]);
-            }else if(el.tagName == "TEXTAREA" || el.tagName == "INPUT"){
-                //check for intellisense
+            if(el.tagName == "TEXTAREA" || el.tagName == "INPUT"){
+                //check for enter press
+                if(e.code == "Enter" && intellisense.isVisible() && intellisense.container.children.length > 0){
+                    //insert intellisense if available
+                    e.preventDefault();
+                    intellisense.submit(intellisense.container.children[0]);
+                }else{
+                    //check for intellisense
+                    Editor.getIntellisenseData().then(({curWord, cursorPos}) => {
+                        if(curWord && cursorPos){
+                            intellisense.check(curWord, cursorPos, el);
+                        }
+                    })
+                }
+                
+            }else{
                 intellisense.hide();
-                Editor.getIntellisenseData().then(({curWord, cursorPos}) => {
-                    if(curWord && cursorPos){
-                        intellisense.check(curWord, cursorPos, el);
-                    }
-                })
             }
         })
     })   
