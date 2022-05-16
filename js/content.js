@@ -111,6 +111,8 @@ class Intellisense {
         //clear and hide div
         this.container.innerHTML = "";
         this.container.style.display = "none";
+        //reset selected
+        this.currentlySelectedIndex = 0;
     }
 
     isVisible(){
@@ -157,6 +159,9 @@ class Intellisense {
             this.updateSelected();
         });
 
+
+        //append and add class
+        if(this.container.children.length === 0) newDiv.classList.add("selected");
         this.container.appendChild(newDiv);
     }
 
@@ -190,25 +195,39 @@ class Intellisense {
 
 window.onload = () => {
     //wait for editor to load
-    waitForElement(".ace_text-input").then(() => {
+    waitForElement(".ace_text-input").then((textInputElement) => {
         //setup objects
         const intellisense = new Intellisense();
         Editor.setTheme("ace/theme/twilight");
 
-        window.addEventListener("keydown", function(e){
+        textInputElement.addEventListener("keydown", function(e){
             const el = e.target;
-
+            console.log(e.code)
             if(el.tagName == "TEXTAREA" || el.tagName == "INPUT"){
                 //check for enter press
-                if(e.code == "Enter" && intellisense.isVisible() && intellisense.container.children.length > 0){
-                    //insert intellisense if available
+                
+                if( (e.code == "Enter" || e.code == "ArrowUp" || e.code == "ArrowDown") && intellisense.isVisible() && intellisense.container.children.length > 0){
                     e.preventDefault();
-                    intellisense.submit(intellisense.container.children[0]);
+                    e.stopPropagation();
+                    //insert intellisense if available
+                    switch(e.code){
+                        case "ArrowUp":
+                            intellisense.onUpArrow();
+                            break;
+                        case "ArrowDown":
+                            intellisense.onDownArrow();
+                            break;
+                        case "Enter":
+                            intellisense.submit(intellisense.container.children[intellisense.currentlySelectedIndex]);
+                            break;
+                    }
                 }else{
                     //check for intellisense
                     Editor.getIntellisenseData().then(({curWord, cursorPos}) => {
                         if(curWord && cursorPos){
                             intellisense.check(curWord, cursorPos, el);
+                        }else{
+                            intellisense.hide();
                         }
                     })
                 }

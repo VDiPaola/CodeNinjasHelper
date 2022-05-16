@@ -120,8 +120,7 @@ function getIntellisenseData(){
   //get current line up to cursor
   const line = editor.session.getTextRange(new Range(range.row, 0, range.row, range.column));
   //get current word without tabs
-  const tab = editor.session.getTabString();
-  const curWord = line.slice(line.lastIndexOf(" ") + 1).trim();
+  const curWord = line.slice(line.lastIndexOf(" ") + 1);
   const cursorPos = editor.selection.getCursor();
 
   return {curWord, cursorPos};
