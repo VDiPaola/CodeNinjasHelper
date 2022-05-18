@@ -108,24 +108,28 @@ class Intellisense {
     }
 
     show(cursorPos, textAreaEl){
-        //position container
-        const rect = textAreaEl.getBoundingClientRect();
-        this.container.style.top = ((cursorPos.row + 1) * rect.height) + this.offsetY + "px";
-        this.container.style.left = ((cursorPos.column) * rect.width) + this.offsetX + "px";
-        //show
-        this.container.style.display = "flex";
+        if(this.container.children.length > 0){
+            //position container
+            const rect = textAreaEl.getBoundingClientRect();
+            this.container.style.top = ((cursorPos.row + 1) * rect.height) + this.offsetY + "px";
+            this.container.style.left = ((cursorPos.column) * rect.width) + this.offsetX + "px";
+            //show
+            this.container.style.display = "flex";
 
-        Editor.setCommandBindingsOn(false);
+            Editor.setCommandBindingsOn(false);
+        }
     }
 
     hide(){
-        //clear and hide div
-        this.container.innerHTML = "";
-        this.container.style.display = "none";
-        //reset selected
-        this.currentlySelectedIndex = 0;
-        
-        Editor.setCommandBindingsOn(true);
+        if(this.container.children.length > 0){
+            //clear and hide div
+            this.container.innerHTML = "";
+            this.container.style.display = "none";
+            //reset selected
+            this.currentlySelectedIndex = 0;
+            
+            Editor.setCommandBindingsOn(true);
+        }
     }
 
     isVisible(){
@@ -134,6 +138,7 @@ class Intellisense {
 
     check = (curWord, cursorPos, textAreaEl) => {
         this.hide();
+
 
         //lookup word in dictionary
         const keys = Object.keys(Dictionary);
@@ -216,7 +221,6 @@ window.onload = () => {
 
         textInputElement.addEventListener("keydown", function(e){
             const el = e.target;
-            console.log(e.code)
             if(el.tagName == "TEXTAREA" || el.tagName == "INPUT"){
                 //check for enter press
                 
