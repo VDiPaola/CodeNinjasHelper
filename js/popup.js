@@ -10,16 +10,17 @@ const storageSet = (key, value) => {
     })
 }
 
-
+let isOn = true;
 (async () => {
     //get on/off value
     storageGet(["isOn"])
         .then(res => {
             console.log(res);
-            
+            isOn = res;
         })
     const powerButton = document.getElementById("powerButton")
     powerButton.addEventListener("click", (e) => {
+        //toggle
         
     })
 })()
