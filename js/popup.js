@@ -10,6 +10,18 @@ const storageSet = (key, value) => {
     })
 }
 
+const storageGetLocal = (keys) => {
+    return new Promise((resolve,_)=>{
+        chrome.storage.sync.get(keys, (res)=> resolve(res));
+    })
+}
+
+const storageSetLocal = (key, value) => {
+    return new Promise((resolve,_)=>{
+        chrome.storage.sync.set({[key]:value}, (res)=> resolve(res));
+    })
+}
+
 let isOn = true;
 (async () => {
     //get on/off value

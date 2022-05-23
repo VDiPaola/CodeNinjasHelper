@@ -200,6 +200,32 @@ async function getCurrentTab() {
     editor.session.setTabSize(value);
   }
   
+
+  function init(){
+    const ace = window.ace
+    const editor = ace.edit("ws");
+    //get keybindings to override
+    const keyBindings = editor.commands.commandKeyBinding;
+    const keyBindingKeys = ["up", "down"];
+  
+    //set default object for options
+    window.codeNinjasHelper = {commandBindingsOn: true};
+  
+    //override exec function of command keybindings
+    for (let key of keyBindingKeys){
+      const exec = keyBindings[key].exec;
+      keyBindings[key].exec = (editor, args) => {
+        if(window.codeNinjasHelper.commandBindingsOn){
+          exec(editor, args);
+        }
+      }
+    }
+  }
+  
+  function setCommandBindingsOn(value){
+    window.codeNinjasHelper.commandBindingsOn = value;
+  }
+  
   
   
   async function execScript(tabId, func, args=[]) {
@@ -256,6 +282,12 @@ async function getCurrentTab() {
               break;
             case "getCurrentWord":
               execScript(tab.id, getCurrentWord).then(send);
+              break;
+            case "init":
+              execScript(tab.id, init).then(send);
+              break;
+            case "setCommandBindingsOn":
+              execScript(tab.id, setCommandBindingsOn, [data.value]).then(send);
               break;
             
           }
