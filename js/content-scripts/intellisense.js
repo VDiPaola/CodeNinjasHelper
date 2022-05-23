@@ -93,7 +93,11 @@ class Intellisense {
             this.container.style.display = "flex";
 
             Editor.setCommandBindingsOn(false);
+<<<<<<< HEAD:js/content-scripts/intellisense.js
         };
+=======
+        }
+>>>>>>> multiple-selection-entries:js/context-scripts/intellisense.js
     }
 
     hide(){
@@ -113,7 +117,13 @@ class Intellisense {
     }
 
     check = (curWord, cursorPos, textAreaEl) => {
+<<<<<<< HEAD:js/content-scripts/intellisense.js
         
+=======
+        this.hide();
+
+
+>>>>>>> multiple-selection-entries:js/context-scripts/intellisense.js
         //lookup word in dictionary
         if(Dictionary.hasOwnProperty(curWord)){
             //append
@@ -180,6 +190,7 @@ window.addEventListener("load", async () => {
 
         window.addEventListener("keydown", function(e){
             const el = e.target;
+<<<<<<< HEAD:js/content-scripts/intellisense.js
             //check for enter press
             if(e.code == "Enter" && intellisense.isVisible() && intellisense.container.children.length > 0){
                 //insert intellisense if available
@@ -187,6 +198,38 @@ window.addEventListener("load", async () => {
                 intellisense.submit(intellisense.container.children[0]);
             }else if(el.tagName == "TEXTAREA" || el.tagName == "INPUT"){
                 //check for intellisense
+=======
+            if(el.tagName == "TEXTAREA" || el.tagName == "INPUT"){
+                //check for enter press
+                
+                if( (e.code == "Enter" || e.code == "ArrowUp" || e.code == "ArrowDown") && intellisense.isVisible() && intellisense.container.children.length > 0){
+                    e.preventDefault();
+                    e.stopPropagation();
+                    //insert intellisense if available
+                    switch(e.code){
+                        case "ArrowUp":
+                            intellisense.onUpArrow();
+                            break;
+                        case "ArrowDown":
+                            intellisense.onDownArrow();
+                            break;
+                        case "Enter":
+                            intellisense.submit(intellisense.container.children[intellisense.currentlySelectedIndex]);
+                            break;
+                    }
+                }else{
+                    //check for intellisense
+                    Editor.getIntellisenseData().then(({curWord, cursorPos}) => {
+                        if(curWord && cursorPos){
+                            intellisense.check(curWord, cursorPos, el);
+                        }else{
+                            intellisense.hide();
+                        }
+                    })
+                }
+                
+            }else{
+>>>>>>> multiple-selection-entries:js/context-scripts/intellisense.js
                 intellisense.hide();
                 Editor.getIntellisenseData().then(({curWord, cursorPos}) => {
                     if(curWord && cursorPos){
