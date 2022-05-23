@@ -9,7 +9,7 @@ const li = `
 `
 
 
-window.onload = ()=>{
+window.addEventListener("load", async () => {
     if(window.location.pathname.includes("/students/cn-cambridge-cam-uk/")){
         waitForElement(".popup .row div:first-child").then(el=>{
             const newButton = document.createElement("button");
@@ -32,7 +32,7 @@ window.onload = ()=>{
             chrome.runtime.sendMessage({type:"dom"});
         })
     }
-}
+})
 
 
 

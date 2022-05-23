@@ -2,9 +2,20 @@ const Dictionary = {
     "if": "if ([cursor]) {\n\n}",
 	"else": "else {\n[cursor]\n}",
 	"function": "function ([cursor]) {\n\n}",
+    "isKeyPressed": "isKeyPressed(Keys.[cursor])",
 }
-const tags = ["[cursor]"]
+const tags = ["[cursor]", "[tab]", "[highlightStart]", "[highlightEnd]"];
 class Editor {
+
+    static init(){
+        this.sendMessage({message: "init"});
+    }
+
+    static setCommandBindingsOn(value){
+        this.sendMessage({message: "setCommandBindingsOn", value:value});
+    }
+
+
     static setTheme(theme) {
         this.sendMessage({message: "setTheme", value: theme});
     }
@@ -66,21 +77,35 @@ class Intellisense {
         const rect = document.getElementsByClassName("ace_text-input")[0].getBoundingClientRect();
 		this.offsetX = rect.x;
 		this.offsetY = rect.top;
+
+        this.caseSensitive = false; //case sensitive for checking intellisense
+        this.currentlySelectedKey = null; //currently selected Dictionary key
+        this.currentlySelectedIndex = 0;
     }
 
     show(cursorPos, textAreaEl){
-        //position container
-        const rect = textAreaEl.getBoundingClientRect();
-        this.container.style.top = ((cursorPos.row + 1) * rect.height) + this.offsetY + "px";
-        this.container.style.left = ((cursorPos.column) * rect.width) + this.offsetX + "px";
-        //show
-        this.container.style.display = "flex";
+        if(this.container.children.length > 0){
+            //position container
+            const rect = textAreaEl.getBoundingClientRect();
+            this.container.style.top = ((cursorPos.row + 1) * rect.height) + this.offsetY + "px";
+            this.container.style.left = ((cursorPos.column) * rect.width) + this.offsetX + "px";
+            //show
+            this.container.style.display = "flex";
+
+            Editor.setCommandBindingsOn(false);
+        };
     }
 
     hide(){
-        //clear and hide div
-        this.container.innerHTML = "";
-        this.container.style.display = "none";
+        if(this.container.children.length > 0){
+            //clear and hide div
+            this.container.innerHTML = "";
+            this.container.style.display = "none";
+            //reset selected
+            this.currentlySelectedIndex = 0;
+            
+            Editor.setCommandBindingsOn(true);
+        }
     }
 
     isVisible(){
@@ -141,13 +166,12 @@ class Intellisense {
     }
 
 }
-
-
-window.onload = () => {
+window.addEventListener("load", async () => {
     //wait for editor to load
     waitForElement(".ace_text-input").then(() => {
         //setup objects
         const intellisense = new Intellisense();
+        Editor.init();
         Editor.setTheme("ace/theme/twilight");
 
         window.addEventListener("click", ()=>{
@@ -156,7 +180,6 @@ window.onload = () => {
 
         window.addEventListener("keydown", function(e){
             const el = e.target;
-
             //check for enter press
             if(e.code == "Enter" && intellisense.isVisible() && intellisense.container.children.length > 0){
                 //insert intellisense if available
@@ -172,8 +195,8 @@ window.onload = () => {
                 })
             }
         })
-    })   
-}
+    })  
+})
 
 
 //waits for selected element to load
