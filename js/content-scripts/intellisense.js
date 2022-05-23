@@ -1,7 +1,7 @@
 const Dictionary = {
-    "if": "if () {\n[cursor]\n}",
+    "if": "if ([cursor]) {\n\n}",
 	"else": "else {\n[cursor]\n}",
-	"function": "function name() {\n[cursor]\n}",
+	"function": "function ([cursor]) {\n\n}",
 }
 const tags = ["[cursor]"]
 class Editor {

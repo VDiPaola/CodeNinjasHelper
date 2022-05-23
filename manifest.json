@@ -22,7 +22,7 @@
 
     "content_scripts": [{
         "matches":    ["*://*/*"],
-        "js":         ["./js/content.js"]
+        "js":         ["./js/content-scripts/intellisense.js","./js/content-scripts/dom.js"]
     },{
         "css": [ "./css/main.css" ],
         "matches":    ["*://*/*"]
