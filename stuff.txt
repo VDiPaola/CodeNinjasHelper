@@ -18,3 +18,13 @@ Moves the cursor's row and column to the next matching bracket.
 
 viewModel.save() // saves
 viewModel.isComplete() //obvious
+
+
+
+//old import method
+const path = "./background-scripts/"
+try {
+  importScripts(path+'intellisense.js', path+"dom.js");
+} catch (e) {
+  console.error(e);
+}

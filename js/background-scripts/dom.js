@@ -1,4 +1,3 @@
-
 const test = `
 <div class="panel panel-default margin-bottom-0 margin-top-0">
 <div class="panel-heading"><span class="panel-heading-title">Star</span></div>
@@ -30,26 +29,9 @@ const test = `
 </div>
 `
 
-// const observer = new MutationObserver((mutationList, _) => {
-//     for(const mutation of mutationList) {
-//         if (mutation.type === 'childList') {
-//             for(const node of mutation.addedNodes) {
-//                 if(node.id === 'props_STAR') {
-//                     console.log("???")
-//                     node.remove()
-                    
-//                 }
-//             }
-//         }
-//     }
-// });
-// observer.observe(document.body, {
-//     childList: true,
-//     subtree: true
-// });
 
 
-function replaceScript(id, script) {
+function replaceScript({id, script}) {
     document.getElementById(id).remove();
     var s = document.createElement("script");
     s.type = "text/html";
@@ -58,36 +40,12 @@ function replaceScript(id, script) {
     document.getElementsByTagName("body")[0].appendChild(s);
 }
 
-
-
-async function execScript(tabId, func, args=[]) {
-    const [{result}] = await chrome.scripting.executeScript({
-      func,
-      args,
-      target: {
-        tabId: tabId ??
-          (await chrome.tabs.query({active: true, currentWindow: true}))[0].id
-      },
-      world: 'MAIN',
-    });
-    return result;
-  }
-
-
-  async function getCurrentTab() {
-    let queryOptions = { active: true, currentWindow: true };
-    let [tab] = await chrome.tabs.query(queryOptions);
-    return tab;
-  }
-
-chrome.runtime.onMessage.addListener((data, sender, sendResponse) => {
-    if (data.type === "dom") {
-      getCurrentTab().then(tab => {
-        if(tab){
-            execScript(tab.id, replaceScript, ["props_STAR", test]);
-        }
-      })
-      
+// execScript(tab.id, replaceScript, ["props_STAR", test]);
+export default class Dom{
+  static onMessage(data){
+    switch(data.message){
+      case "replaceScript":
+        return replaceScript;
     }
-    return true;
-  });
+  }
+}

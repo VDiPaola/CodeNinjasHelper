@@ -62,7 +62,7 @@ class Editor {
     }
 
     static async sendMessage(data){
-        data = {type:"ace", ...data};
+        data = {type:"intellisense", ...data};
         return await chrome.runtime.sendMessage(data)
     }
 }
