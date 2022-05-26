@@ -27,29 +27,16 @@ const storageGet = (keys) => {
 if(window.location.pathname.includes("/students/cn-cambridge-cam-uk/")){
     //home page
     waitForElements(".popup", 9).then(popups => {
-        //get link values from storage
+        //get belt link values from global storage
         for(let popup of popups){
-            console.log(popup.parentNode.id)
+            const beltId = popup.parentNode.id
+            //append button for each link/popup
+            const parentEl = popup.querySelector(".row div:first-child");
+            const newButton = elementBuilder("button", {textContent:"Prove Yourself S.O.S",className:"btn btn-success btn-block"}, parentEl);
+            newButton.addEventListener("click", ()=>window.open(""));
         }
     })
-    // const observer = new MutationObserver((mutationList, _) => {
-    //     for(const mutation of mutationList) {
-    //         if (mutation.type === 'childList') {
-    //             for(const node of mutation.addedNodes) {
-    //                 console.log(node.className)
-    //                 node.className = node.className ?? "";
-    //                 if(node.className.includes("popup")) {
-    //                     const parentEl = node.querySelector(".row div:first-child");
-    //                     const newButton = elementBuilder("button", {textContent:"Prove Yourself S.O.S",className:"btn btn-success btn-block"}, parentEl);
-    //                     newButton.addEventListener("click", ()=>{
-    //                         window.open("");
-    //                     });
-    //                 }
-    //             }
-    //         }
-    //     }
-    // });
-    // observer.observe(document.body, {childList: true,subtree: true});
+
 }else if(window.location.pathname.includes("/Treks/Details/")){
     //scene selection page
     waitForElement("#scenes").then((el)=>{
