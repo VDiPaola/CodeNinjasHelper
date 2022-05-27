@@ -1,0 +1,1 @@
+//things to be sshared between the content and background scripts

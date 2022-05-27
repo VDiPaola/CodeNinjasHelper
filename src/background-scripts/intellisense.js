@@ -1,9 +1,7 @@
-
 //[data.value, data.position, data.resetUndoHistory]
 function setValue({value, cursorPosition, resetUndoHistory=false}){
   //sets text at specified position
-  const ace = window.ace
-  const editor = ace.edit("ws");
+  const editor = window.ace.edit("ws");
 
   if(resetUndoHistory){
     editor.setValue(value, cursorPosition);
@@ -15,8 +13,7 @@ function setValue({value, cursorPosition, resetUndoHistory=false}){
 
 function insertText({value}){
   //inserts text as if user typed it
-  const ace = window.ace
-  const editor = ace.edit("ws");
+  const editor = window.ace.edit("ws");
 
   //get how many tabs at start of current line
   const tabChar = editor.session.getTabString();
@@ -69,8 +66,7 @@ function insertText({value}){
 
 function getAllText(){
   //returns all text in editor
-  const ace = window.ace
-  const editor = ace.edit("ws");
+  const editor = window.ace.edit("ws");
 
   editor.insert(value);
   return editor.getValue();
@@ -79,43 +75,39 @@ function getAllText(){
 
 function replaceInRange({value, startRow, startColumn, endRow, endColumn}){
   //replaces text in range
-  const ace = window.ace
-  const editor = ace.edit("ws");
-  const Range = require('ace/range').Range;
+  const editor = window.ace.edit("ws");
+
   const range = new Range(startRow, startColumn, endRow, endColumn);
   editor.session.replace(range, value);
 }
 
 function getCursor(){
   //returns range that cursor is at
-  const ace = window.ace
-  const editor = ace.edit("ws");
+  const editor = window.ace.edit("ws");
   return editor.selection.getCursor();
 }
 
 function moveCursorTo({row, column}){
   //moves cursor to specified position
-  const ace = window.ace
-  const editor = ace.edit("ws");
+  const editor = window.ace.edit("ws");
   editor.moveCursorTo(row, column);
 }
 
 function setFontSize({value}){
-  const ace = window.ace
-  const editor = ace.edit("ws");
+  const editor = window.ace.edit("ws");
   editor.setFontSize(value);
 }
 
 function getIntellisenseData(){
   //returns current word and cursor position
-  const ace = window.ace
-  const editor = ace.edit("ws");
-  const Range = require('ace/range').Range;
+  const editor = window.ace.edit("ws");
+  const Range = window.ace.require("ace/range").Range;
+
   const range = editor.selection.getCursor();
   //get current line up to cursor
   const line = editor.session.getTextRange(new Range(range.row, 0, range.row, range.column));
   //get current word without tabs
-  const tab = editor.session.getTabString();
+  //const tab = editor.session.getTabString();
   const curWord = line.slice(line.lastIndexOf(" ") + 1).trim();
   const cursorPos = editor.selection.getCursor();
 
@@ -125,79 +117,73 @@ function getIntellisenseData(){
 
 function getCurrentLine(){
   //returns current line up to the cursor position
-  const ace = window.ace
-  const editor = ace.edit("ws");
-  const Range = require('ace/range').Range;
+  const editor = window.ace.edit("ws");
+  const Range = window.ace.require("ace/range").Range;
+  
   const range = editor.selection.getCursor();
   return editor.session.getTextRange(new Range(range.row, 0, range.row, range.column));
 }
 
 function getCurrentWord(){
   //returns current word before cursor
-  const ace = window.ace
-  const editor = ace.edit("ws");
-  const Range = require('ace/range').Range;
+  const editor = window.ace.edit("ws");
+  const Range = window.ace.require("ace/range").Range;
+  
   const range = editor.selection.getCursor();
   //get current line up to cursor
   const line = editor.session.getTextRange(new Range(range.row, 0, range.row, range.column));
   //get current word without tabs
-  const tab = editor.session.getTabString();
   return line.slice(line.lastIndexOf(" ") + 1).trim();
 }
 
 function onChange(){
-  const ace = window.ace
-  const editor = ace.edit("ws");
-  const Range = require('ace/range').Range;
-    //chrome.runtime.sendMessage(delta);
-    const range = editor.find("if",{
-      backwards: true,
-      wrap: false,
-      caseSensitive: false,
-      wholeWord: false,
-      regExp: false
-    });
-    if (range) {
-      //editor.insert("Something cool");
-    }
-    // // editor.findNext();
-    // // editor.findPrevious();
-    // editor.replaceAll("if () {}");
+  const editor = window.ace.edit("ws");
+  const Range = window.ace.require("ace/range").Range;
     
-    return;
-    editor.session.replace(new Range(0, 0, 1, 1), "abc");
+  //chrome.runtime.sendMessage(delta);
+  const range = editor.find("if",{
+    backwards: true,
+    wrap: false,
+    caseSensitive: false,
+    wholeWord: false,
+    regExp: false
+  });
+  if (range) {
+    //editor.insert("Something cool");
+  }
+  // // editor.findNext();
+  // // editor.findPrevious();
+  // editor.replaceAll("if () {}");
+      
+  return;
+  editor.session.replace(new Range(0, 0, 1, 1), "abc");
 }
 
 //editor.setValue("text2", -1); // set value and move cursor to the start of the text
 //editor.getValue(); // or session.getValue
 
 function setTheme({value}){
-  const ace = window.ace
-  const editor = ace.edit("ws");
+  const editor = window.ace.edit("ws");
   editor.setTheme(value);
 }
 
 function toggleUseWrapMode({value}){
-  const ace = window.ace
-  const editor = ace.edit("ws");
+  const editor = window.ace.edit("ws");
   editor.session.setUseWrapMode(!editor.session.getUseWrapMode());
 }
 
 function getUseWrapMode({value}){
-  const ace = window.ace
-  const editor = ace.edit("ws");
+  const editor = window.ace.edit("ws");
   editor.session.getUseWrapMode();
 }
 
 function setTabSize({value}){
-  const ace = window.ace
-  const editor = ace.edit("ws");
+  const editor = window.ace.edit("ws");
   editor.session.setTabSize(value);
 }
 
-function init(){
-  const ace = window.ace
-  const editor = ace.edit("ws");
+function initFunc(){
+  const editor = window.ace.edit("ws");
   //get keybindings to override
   const keyBindings = editor.commands.commandKeyBinding;
   const keyBindingKeys = ["up", "down"];
@@ -220,9 +206,10 @@ function setCommandBindingsOn({value}){
   window.codeNinjasHelper.commandBindingsOn = value;
 }
 
+
 export default class Intellisense{
-  static onMessage(data){
-    switch(data.message){
+  static onMessage(message){
+    switch(message){
       case "setValue":
         return setValue;
       case "insertText":
@@ -248,9 +235,10 @@ export default class Intellisense{
       case "getCurrentWord":
         return getCurrentWord;
       case "init":
-        return init;
+        return initFunc;
       case "setCommandBindingsOn":
         return setCommandBindingsOn;
     }
+    
   }
 }

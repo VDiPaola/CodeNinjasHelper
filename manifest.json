@@ -17,15 +17,15 @@
     ],
 
     "background":{
-        "service_worker":"./js/background.js",
+        "service_worker":"./dist/background.js",
         "type": "module"
     },
 
     "content_scripts": [{
         "matches":    ["*://*/*"],
-        "js":         ["./js/content-scripts/intellisense.js","./js/content-scripts/dom.js"]
+        "js":         ["./dist/content-scripts/intellisense.js","./dist/content-scripts/dom.js"]
     },{
-        "css": [ "./css/main.css" ],
+        "css": [ "./main.css" ],
         "matches":    ["*://*/*"]
      } ],
 
@@ -34,7 +34,7 @@
     ],
 
     "action": {
-        "default_popup": "popup.html"
+        "default_popup": "./popup/popup.html"
       }
 
 

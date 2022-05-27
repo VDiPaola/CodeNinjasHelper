@@ -42,8 +42,8 @@ function replaceScript({id, script}) {
 
 // execScript(tab.id, replaceScript, ["props_STAR", test]);
 export default class Dom{
-  static onMessage(data){
-    switch(data.message){
+  static onMessage(message){
+    switch(message){
       case "replaceScript":
         return replaceScript;
     }
