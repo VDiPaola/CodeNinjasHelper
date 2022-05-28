@@ -1,4 +1,6 @@
-import { Editor, Intellisense } from "./classes";
+import { Editor } from "./classes/Editor";
+import { Intellisense } from "./classes/Intellisense";
+import {waitForElement} from "./classes/Helpers";
 
 window.addEventListener("load", async () => {
     //wait for editor to load
@@ -46,26 +48,3 @@ window.addEventListener("load", async () => {
         })
     }) 
 })
-
-
-//waits for selected element to load
-function waitForElement(selector) {
-    return new Promise(resolve => {
-        if (document.querySelector(selector)) {
-            return resolve(document.querySelector(selector));
-        }
-
-        const observer = new MutationObserver(_ => {
-            if (document.querySelector(selector)) {
-                resolve(document.querySelector(selector));
-                observer.disconnect();
-            }
-        });
-
-        observer.observe(document.body, {
-            childList: true,
-            subtree: true
-        });
-    });
-}
-
