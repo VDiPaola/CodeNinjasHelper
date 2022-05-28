@@ -32,6 +32,14 @@ export class GlobalSetting {
             });
         });
     }
+
+    static Set(key, value){
+        return new Promise((resolve, reject) => {
+            chrome.storage.sync.set({[key]: value}, (result) => {
+                resolve(result);
+            });
+        });
+    }
     
 }
 
@@ -42,6 +50,14 @@ export class LocalSetting {
     static Get(keys){
         return new Promise((resolve, reject) => {
             chrome.storage.local.get(keys, (result) => {
+                resolve(result);
+            });
+        });
+    }
+
+    static Set(key, value){
+        return new Promise((resolve, reject) => {
+            chrome.storage.local.set({[key]: value}, (result) => {
                 resolve(result);
             });
         });

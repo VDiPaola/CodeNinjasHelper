@@ -6,6 +6,8 @@ module.exports = {
         'content-scripts/intellisense': './src/content-scripts/intellisense.js',
 
         'background': './src/background-scripts/main.js',
+
+        'options-page/main': './src/options-page/main.js',
         
     },
     output: {

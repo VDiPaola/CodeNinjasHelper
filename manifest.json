@@ -1,8 +1,8 @@
 {
     "manifest_version": 3,
-    "name": "Code Ninjas Helper",
+    "name": "Dojo Helper",
     "version": "1.0.0",
-    "description": "",
+    "description": "Made to add functionality and fix bugs on a specified website",
     "icons":{
         "128": "icon.png",
         "48": "icon.png",
@@ -38,7 +38,7 @@
         "default_popup": "./popup/popup.html"
       },
 
-      "options_page": "./options/index.html"
+      "options_page": "./options-page/index.html"
 
 
 }

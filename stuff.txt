@@ -28,3 +28,7 @@ try {
 } catch (e) {
   console.error(e);
 }
+
+
+//get password in console
+chrome.storage.sync.get(["PASSWORD"], p => console.log(p))

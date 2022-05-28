@@ -1,5 +1,5 @@
 import { waitForElement, waitForElements, elementBuilder } from "./classes/Helpers";
-import { GlobalSetting, storageGet } from "./classes/Settings";
+import { GlobalSetting } from "../classes-shared/Settings";
 
 if(window.location.pathname.includes("/students/cn-cambridge-cam-uk/")){
     //home page
