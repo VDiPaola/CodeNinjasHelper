@@ -1,4 +1,4 @@
-import {GlobalSetting} from "../classes-shared/Settings";
+import {GlobalSetting, BELTS} from "../classes-shared/Settings";
 
 window.addEventListener("load", async () => {
     //get settings from storage
@@ -20,7 +20,7 @@ window.addEventListener("load", async () => {
                 const password = document.getElementById("password-signup").value;
                 GlobalSetting.Set(GlobalSetting.PASSWORD.key, password).then(()=>{
                     //show options page
-                    show(document.getElementById("options"))
+                    initOptions(settings);
                     hide(document.getElementById("sign-up"))
                 })
             })
@@ -31,7 +31,7 @@ window.addEventListener("load", async () => {
                 const password = document.getElementById("password-login").value;
                 if(settings[GlobalSetting.PASSWORD.key] === password){
                     //show options page
-                    show(document.getElementById("options"))
+                    initOptions(settings);
                     hide(document.getElementById("login"))
                 }else{
                     //wrong password
@@ -46,6 +46,73 @@ window.addEventListener("load", async () => {
     })
     
 })
+
+
+function initOptions(settings){
+    //set setting values
+    const intellisenseCase = document.getElementById("options-intellisense-caseSensitive");
+    intellisenseCase.checked = settings[GlobalSetting.CASE_SENSITIVE.key];
+
+    const beltsEnabledContainer = document.getElementById("options-intellisense-belts-enabled");
+    for(let beltKey of BELTS){
+        //create elements
+        const formContainer = document.createElement("div");
+        formContainer.className = "form-check col";
+        const input = document.createElement("input");
+        input.type = "checkbox";
+        input.className = "form-check-input";
+        input.id = "options-intellisense-belts-enabled-"+beltKey;
+        const label = document.createElement("label");
+        label.className = "form-check-label";
+        label.innerText = beltKey;
+        label.setAttribute("for",input.id);
+        input.checked = settings[GlobalSetting.INTELLISENSE_ENABLED_PER_BELT.key][beltKey];
+
+        //add to dom
+        formContainer.appendChild(input);
+        formContainer.appendChild(label);
+
+        beltsEnabledContainer.appendChild(formContainer);
+
+        //event listener
+        input.addEventListener("change",(e)=>{
+            settings[GlobalSetting.INTELLISENSE_ENABLED_PER_BELT.key][beltKey] = e.target.checked;
+            GlobalSetting.Set(GlobalSetting.INTELLISENSE_ENABLED_PER_BELT.key, settings[GlobalSetting.INTELLISENSE_ENABLED_PER_BELT.key]);
+        })
+    }
+
+    //add event listeners
+    document.getElementById("options-password-button").addEventListener("click",(e)=>{
+        //check password isnt blank
+        const passwordEl = document.getElementById("options-password-input");
+        if(passwordEl.value){
+            //save password
+            GlobalSetting.Set(GlobalSetting.PASSWORD.key, passwordEl.value).then(()=>{
+                //show saved message
+                passwordEl.value = ""
+                alert("Password saved!")
+            })
+        }else{
+            //show error message
+            alert("Password cannot be blank!")
+        }
+    })
+
+    document.getElementById("options-reset-button").addEventListener("click",(e)=>{
+        //reset values
+        GlobalSetting.Set(GlobalSetting.PASSWORD.key, passwordEl.value).then(()=>{
+            //refresh page
+        })
+    })
+
+    intellisenseCase.addEventListener("change",(e)=>{
+        //set intellisense case sensitive
+        GlobalSetting.Set(GlobalSetting.CASE_SENSITIVE.key, intellisenseCase.checked)
+    })
+
+    //show options
+    show(document.getElementById("options"))
+}
 
 function show(el){
     el.classList.remove("hide");

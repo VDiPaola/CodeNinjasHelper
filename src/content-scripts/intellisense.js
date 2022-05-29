@@ -1,9 +1,35 @@
 import { Editor } from "./classes/Editor";
 import { Intellisense } from "./classes/Intellisense";
 import {waitForElement} from "./classes/Helpers";
+import {GlobalSetting, BELTS} from "../classes-shared/Settings";
 
 window.addEventListener("load", async () => {
     //wait for editor to load
+
+    //check intellisense should be enabled
+    GlobalSetting.INTELLISENSE_ENABLED_PER_BELT.Get().then((value) => {
+        const metaTags = document.querySelectorAll("[property]");
+        let intellisenseEnabled = false;
+        //loop through meta tags to get name of current belt
+        for(let meta of metaTags){
+            const possibleBelt = meta.getAttribute("content").split(" ")[0].toLowerCase();
+            //check if belt is on/off
+            if(BELTS.includes(possibleBelt) && value[possibleBelt]){
+                intellisenseEnabled = true;
+                break;   
+            }
+        }
+        console.log(intellisenseEnabled)
+        if(intellisenseEnabled){
+            //start intellisense
+            startIntellisense();
+        }
+    })
+    
+})
+
+
+function startIntellisense(){
     waitForElement(".ace_text-input").then((textInputElement) => {
         //setup objects
         const intellisense = new Intellisense();
@@ -46,5 +72,5 @@ window.addEventListener("load", async () => {
                 intellisense.hide();
             }
         })
-    }) 
-})
+    })
+}

@@ -32,3 +32,7 @@ try {
 
 //get password in console
 chrome.storage.sync.get(["PASSWORD"], p => console.log(p))
+
+
+//getting objects
+viewModel.scene().objects()
