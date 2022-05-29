@@ -19,7 +19,7 @@ window.addEventListener("load", async () => {
                 break;   
             }
         }
-        console.log(intellisenseEnabled)
+        
         if(intellisenseEnabled){
             //start intellisense
             startIntellisense();
@@ -59,7 +59,6 @@ function startIntellisense(){
                 }else{
                     //check for intellisense
                     Editor.getIntellisenseData().then(({curWord, cursorPos}) => {
-                        console.log(curWord)
                         if(curWord && cursorPos){
                             intellisense.check(curWord, cursorPos, el);
                         }else{
