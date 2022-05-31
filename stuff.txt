@@ -36,3 +36,4 @@ chrome.storage.sync.get(["PASSWORD"], p => console.log(p))
 
 //getting objects
 viewModel.scene().objects()
+viewModel.scene().selectedObject()

@@ -36,8 +36,9 @@ export class GlobalSetting {
     static AUTO_SAVE_INCREMENT = new Setting('AUTO_SAVE_INCREMENT', 5);
     static PROVE_YOURSELF_SOS = new Setting('PROVE_YOURSELF_SOS', defaultLinkValues);
     static END_OF_BELT_QUIZ = new Setting('END_OF_BELT_QUIZ', defaultLinkValues);
-    static INTELLISENSE_ENABLED = new Setting("INTELLISENSE_ENABLED", true);
     static INTELLISENSE_ENABLED_PER_BELT = new Setting("INTELLISENSE_ENABLED_PER_BELT", defaultEnabledValues);
+    static INTELLISENSE_ENABLED = new Setting("INTELLISENSE_ENABLED", true);
+    
 
 
     static Get(keys){

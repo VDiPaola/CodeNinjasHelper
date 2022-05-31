@@ -1,10 +1,13 @@
 import {GlobalSetting, BELTS} from "../classes-shared/Settings";
 
+let settings = {};
+
 window.addEventListener("load", async () => {
     //get settings from storage
     const settingsKeys = Object.keys(GlobalSetting);
-    GlobalSetting.Get(settingsKeys).then(settings=> {
+    GlobalSetting.Get(settingsKeys).then(settingsObj=> {
         //set settings to default if not set
+        settings = settingsObj;
         for (let settingKey of settingsKeys){
             if(!settings.hasOwnProperty(settingKey)){
                 GlobalSetting.Set(settingKey, GlobalSetting[settingKey].defaultValue);
@@ -20,7 +23,7 @@ window.addEventListener("load", async () => {
                 const password = document.getElementById("password-signup").value;
                 GlobalSetting.Set(GlobalSetting.PASSWORD.key, password).then(()=>{
                     //show options page
-                    initOptions(settings);
+                    initOptions();
                     hide(document.getElementById("sign-up"))
                 })
             })
@@ -48,37 +51,21 @@ window.addEventListener("load", async () => {
 })
 
 
-function initOptions(settings){
-    //set setting values
+function initOptions(){
+    //set inital setting values
+
+    //intellisense
     const intellisenseCase = document.getElementById("options-intellisense-caseSensitive");
     intellisenseCase.checked = settings[GlobalSetting.CASE_SENSITIVE.key];
 
-    const beltsEnabledContainer = document.getElementById("options-intellisense-belts-enabled");
-    for(let beltKey of BELTS){
-        //create elements
-        const formContainer = document.createElement("div");
-        formContainer.className = "form-check col";
-        const input = document.createElement("input");
-        input.type = "checkbox";
-        input.className = "form-check-input";
-        input.id = "options-intellisense-belts-enabled-"+beltKey;
-        const label = document.createElement("label");
-        label.className = "form-check-label";
-        label.innerText = beltKey;
-        label.setAttribute("for",input.id);
-        input.checked = settings[GlobalSetting.INTELLISENSE_ENABLED_PER_BELT.key][beltKey];
-
-        //add to dom
-        formContainer.appendChild(input);
-        formContainer.appendChild(label);
-
-        beltsEnabledContainer.appendChild(formContainer);
-
-        //event listener
-        input.addEventListener("change",(e)=>{
-            settings[GlobalSetting.INTELLISENSE_ENABLED_PER_BELT.key][beltKey] = e.target.checked;
-            GlobalSetting.Set(GlobalSetting.INTELLISENSE_ENABLED_PER_BELT.key, settings[GlobalSetting.INTELLISENSE_ENABLED_PER_BELT.key]);
-        })
+    //createBeltLinkElement(beltKey, containerId, settingsKey)
+    for(let [index, beltKey] of BELTS.entries()){
+        if(index < 4){
+            createBeltIntellisenseElements(beltKey);
+        }
+        //create link elements
+        createBeltLinkElement(beltKey, "options-belt-helper-links", GlobalSetting.PROVE_YOURSELF_SOS.key);
+        createBeltLinkElement(beltKey, "options-belt-end-links", GlobalSetting.END_OF_BELT_QUIZ.key);
     }
 
     //add event listeners
@@ -112,6 +99,61 @@ function initOptions(settings){
 
     //show options
     show(document.getElementById("options"))
+}
+
+function createBeltIntellisenseElements(beltKey){
+    const beltsEnabledContainer = document.getElementById("options-intellisense-belts-enabled");
+    //create elements
+    const formContainer = document.createElement("div");
+    formContainer.className = "form-check col";
+    const input = document.createElement("input");
+    input.type = "checkbox";
+    input.className = "form-check-input";
+    input.id = "options-intellisense-belts-enabled-"+beltKey;
+    const label = document.createElement("label");
+    label.className = "form-check-label";
+    label.innerText = beltKey;
+    label.setAttribute("for",input.id);
+    input.checked = settings[GlobalSetting.INTELLISENSE_ENABLED_PER_BELT.key][beltKey];
+
+    //add to dom
+    formContainer.appendChild(input);
+    formContainer.appendChild(label);
+
+    beltsEnabledContainer.appendChild(formContainer);
+
+    //event listener
+    input.addEventListener("change",(e)=>{
+        settings[GlobalSetting.INTELLISENSE_ENABLED_PER_BELT.key][beltKey] = e.target.checked;
+        GlobalSetting.Set(GlobalSetting.INTELLISENSE_ENABLED_PER_BELT.key, settings[GlobalSetting.INTELLISENSE_ENABLED_PER_BELT.key]);
+    })
+}
+
+function createBeltLinkElement(beltKey, containerId, settingsKey){
+    const container = document.getElementById(containerId);
+    //create elements
+    const formContainer = document.createElement("div");
+    formContainer.className = "form-text col-sm-12 col-md-3";
+    const input = document.createElement("input");
+    input.type = "text";
+    input.className = "form-text-input";
+    input.id = containerId+beltKey;
+    input.value = settings[settingsKey][beltKey];
+    const label = document.createElement("label");
+    label.className = "form-text-label";
+    label.innerText = beltKey;
+    label.setAttribute("for",input.id);
+
+    //add to dom
+    formContainer.appendChild(input);
+    formContainer.appendChild(label);
+
+    input.addEventListener("change", (e)=>{
+        settings[settingsKey][beltKey] = e.target.value;
+        GlobalSetting.Set(settingsKey, settings[settingsKey]);
+    })
+
+    container.appendChild(formContainer);
 }
 
 function show(el){
