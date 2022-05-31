@@ -4,7 +4,8 @@ const props_STAR = `
 <div class="panel-body">
     <div class="form-group">
         <label>Number of Points</label>
-        <input type="number" class="form-control"  min="2" max="999" value="5" onchange="((v)=>{
+        <input type="number" class="form-control"  min="2" max="999" value="5" oninput="((v)=>{
+            if(v == 0){return;}
             v = v > 999 ? 999 : v;
             v = v < 2 ? 2 : v;
             viewModel.scene().selectedObject().numPoints(v);
@@ -131,7 +132,7 @@ const Object_General = `
         </div>
         <div class="form-group" data-bind="visible : selectedObject().scaleY">
             <label class="">Scale Y</label>
-            <input type="number" step="0.01" value="1" class="form-control" onchange="((v)=>{
+            <input type="number" step="0.01" value="1" class="form-control" oninput="((v)=>{
                 if(v == 0){return;}
                 v = v == 0 ? 0.01 : v;
                 viewModel.scene().selectedObject().scaleY(v);
@@ -160,26 +161,30 @@ const GO_Position = `
     <div class="form-group">
         <div class="input-group">
             <label class="input-group-addon" title="Controls the left/right position of the object.">X</label>
-            <div class="custom-form">
-            <input type="number" class="form-control" data-bind="value : selectedObject().x" required />
-            <button type="button" class="btn btn-primary" >Left</button>
-            <button type="button" class="btn btn-primary" >Center</button>
-            <button type="button" class="btn btn-primary" >Right</button>
-            </div>
+            <input type="number" class="form-control" data-bind="value : selectedObject().x" required value="400" oninput="((v)=>{
+                if(v == 0){return;}
+                viewModel.scene().selectedObject().x(v);
+            })(this.value)"/>
         </div>
     </div>
     <div class="form-group">
-            <label>Y: <span data-bind="text:selectedObject().y"></span></label>
-            <input type="range" min="0" max="viewModel.scene().height()" step="1" class="form-control" oninput="((v)=>{
-                viewModel.scene().selectedObject().y(v);
-                this.value = v;
-            })(this.value)"/>
+        <input type="range" min="0" max="800" step="1" class="form-control"  data-bind="value : selectedObject().x" oninput="((v)=>{
+            viewModel.scene().selectedObject().x(v);
+        })(this.value)"/>
     </div>
     <div class="form-group">
         <div class="input-group">
             <label class="input-group-addon" title="Controls the up/down position of the object.">Y</label>
-            <input type="number" class="form-control" data-bind="value : selectedObject().y" required />
+            <input type="number" class="form-control" data-bind="value : selectedObject().y" required value="300" oninput="((v)=>{
+                if(v == 0){return;}
+                viewModel.scene().selectedObject().y(v);
+            })(this.value)"/>
         </div>
+    </div>
+    <div class="form-group">
+            <input type="range" min="0" max="600" step="1" class="form-control"  data-bind="value : selectedObject().y" oninput="((v)=>{
+                viewModel.scene().selectedObject().y(v);
+            })(this.value)"/>
     </div>
     <div class="form-group">
         <div class="input-group">
