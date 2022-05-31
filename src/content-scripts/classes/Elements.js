@@ -1,4 +1,4 @@
-export const STAR_ELEMENT = `
+const props_STAR = `
 <div class="panel panel-default margin-bottom-0 margin-top-0">
 <div class="panel-heading"><span class="panel-heading-title">Star</span></div>
 <div class="panel-body">
@@ -23,7 +23,7 @@ export const STAR_ELEMENT = `
 </div>
 `
 
-const GENERAL_OBJECT = `
+const Object_General = `
 <div class="panel panel-default margin-bottom-0 margin-top-0">
 <div class="panel-heading">
     <div class="row">
@@ -122,11 +122,21 @@ const GENERAL_OBJECT = `
         </div>
         <div class="form-group" data-bind="visible : selectedObject().scaleX">
             <label class="">Scale X</label>
-            <input type="number" step="0.01" class="form-control" data-bind="value : selectedObject().scaleX" />
+            <input type="number" step="0.01" value="1" class="form-control" oninput="((v)=>{
+                if(v == 0){return;}
+                v = v == 0 ? 0.01 : v;
+                viewModel.scene().selectedObject().scaleX(v);
+                this.value = v;
+            })(this.value)"  />
         </div>
         <div class="form-group" data-bind="visible : selectedObject().scaleY">
             <label class="">Scale Y</label>
-            <input type="number" step="0.01" class="form-control" data-bind="value : selectedObject().scaleY" />
+            <input type="number" step="0.01" value="1" class="form-control" onchange="((v)=>{
+                if(v == 0){return;}
+                v = v == 0 ? 0.01 : v;
+                viewModel.scene().selectedObject().scaleY(v);
+                this.value = v;
+            })(this.value)"  />
         </div>
         <div class="form-group" data-bind="visible : selectedObject().scaleY">
             <label class="">Opacity: <span data-bind="text:selectedObject().opacity"></span></label>
@@ -142,3 +152,92 @@ const GENERAL_OBJECT = `
 </div>
 </div>
 `
+
+const GO_Position = `
+<div class="panel panel-default margin-bottom-0 margin-top-0">
+<div class="panel-heading"><span class="panel-heading-title">Position (<span data-bind="text: selectedObject().x"></span>,<span data-bind="text: selectedObject().y"></span>)</span></div>
+<div class="panel-body">
+    <div class="form-group">
+        <div class="input-group">
+            <label class="input-group-addon" title="Controls the left/right position of the object.">X</label>
+            <div class="custom-form">
+            <input type="number" class="form-control" data-bind="value : selectedObject().x" required />
+            <button type="button" class="btn btn-primary" >Left</button>
+            <button type="button" class="btn btn-primary" >Center</button>
+            <button type="button" class="btn btn-primary" >Right</button>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+            <label>Y: <span data-bind="text:selectedObject().y"></span></label>
+            <input type="range" min="0" max="viewModel.scene().height()" step="1" class="form-control" oninput="((v)=>{
+                viewModel.scene().selectedObject().y(v);
+                this.value = v;
+            })(this.value)"/>
+    </div>
+    <div class="form-group">
+        <div class="input-group">
+            <label class="input-group-addon" title="Controls the up/down position of the object.">Y</label>
+            <input type="number" class="form-control" data-bind="value : selectedObject().y" required />
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="input-group">
+            <label class="input-group-addon" title="This determines which objects are in front of others. Small numbers are closer to the user.">Z</label>
+            <input type="number" min="0" class="form-control" data-bind="value : selectedObject().z" required />
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="input-group">
+            <label class="input-group-addon" title="This is the angular direction that the object is facing.">Rotation</label>
+            <input type="number" class="form-control" data-bind="value : selectedObject().rotation" required />
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="input-group">
+            <label class="input-group-addon" title="This is the speed that the object travels in the X direction.">Speed X</label>
+            <input type="number" class="form-control" data-bind="value : selectedObject().speedX" required />
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="input-group">
+            <label class="input-group-addon" title="This is the speed that the object travels in the Y direction.">Speed Y</label>
+            <input type="number" class="form-control" data-bind="value : selectedObject().speedY" required />
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="input-group">
+            <label class="input-group-addon" title="This is the rotational X offset that is relative the object's X value'.">Offset X</label>
+            <input type="number" class="form-control" data-bind="value : selectedObject().offsetX" required />
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="input-group">
+            <label class="input-group-addon" title="This is the rotational Y offset that is relative the object's Y value">Offset Y</label>
+            <input type="number" class="form-control" data-bind="value : selectedObject().offsetY" required />
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="input-group">
+            <label class="input-group-addon" title="This is the logical direction that the object is traveling.">Direction</label>
+            <select data-bind="value: selectedObject().direction" class="form-control">
+                <option value="0">East</option>
+                <option value="45">Northeast</option>
+                <option value="90">North</option>
+                <option value="135">Northwest</option>
+                <option value="180">West</option>
+                <option value="225">Southwest</option>
+                <option value="270">South</option>
+                <option value="315">Southeast</option>
+            </select>
+        </div>
+    </div>
+</div>
+</div>
+`
+
+export const Elements = {
+    props_STAR,
+    Object_General,
+    GO_Position
+}

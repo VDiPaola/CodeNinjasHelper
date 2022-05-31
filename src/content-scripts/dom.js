@@ -1,6 +1,6 @@
 import { waitForElement, waitForElements, elementBuilder } from "./classes/Helpers";
 import { GlobalSetting, BELTS } from "../classes-shared/Settings";
-import { STAR_ELEMENT } from "./classes/Elements";
+import { Elements } from "./classes/Elements";
 
 if(window.location.pathname.includes("/students/cn-cambridge-cam-uk/")){
     //home page
@@ -45,9 +45,11 @@ if(window.location.pathname.includes("/students/cn-cambridge-cam-uk/")){
     //inside scene page
     waitForElement(".ace_text-input").then(inputEl => {
         //go through array of ids and scripts to replace
-        const starEl = document.querySelector("#props_STAR");
-        if(starEl){
-            chrome.runtime.sendMessage({type:"dom", id:"props_STAR", script: STAR_ELEMENT, message:"replaceScript"});
+        for(let id of Object.keys(Elements)){
+            const el = document.querySelector("#" + id);
+            if(el){
+                chrome.runtime.sendMessage({type:"dom", id, script: Elements[id], message:"replaceScript"});
+            }
         }
     })
 }
