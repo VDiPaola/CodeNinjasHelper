@@ -15,6 +15,9 @@
     .form-check{
         text-align: start;
     }
+    .dropdown-item{
+        cursor: pointer;
+    }
     </style>
 </head>
 <body class="text-center">
@@ -66,16 +69,40 @@
             <!-- INTELLISENSE -->
             <h4>Intellisense</h4>
             <div class="row align-items-center justify-content-center">
-                <div class="form-check justify-content-center col-2">
+                <div class="form-check justify-content-center col">
                     <input class="form-check-input" type="checkbox" value="" id="options-intellisense-caseSensitive">
                     <label class="form-check-label" for="options-intellisense-caseSensitive">Case-Sensitive</label>
                 </div>
             </div>
         </div>
+
+        <div class="row mt-4 justify-content-center">
+            <!-- SCENE -->
+            <h4>Scene</h4>
+            <div class="row align-items-center justify-content-center">
+                <div class="form-check justify-content-center col-2">
+                    <input class="form-check-input" type="checkbox" value="" id="options-scene-autoSaveEnabled">
+                    <label class="form-check-label" for="options-scene-autoSaveEnabled">Auto Save Enabled</label>
+                </div>
+            </div>
+            <!-- auto save -->
+            <div class="dropdown col-3">
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="options-autosave-dropdown-button" data-bs-toggle="dropdown" aria-expanded="false">
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="options-autosave-dropdown" id="options-autosave-dropdown">
+                    <li><a class="dropdown-item options-autosave-dropdown-item" value="1">1 Minutes</a></li>
+                    <li><a class="dropdown-item options-autosave-dropdown-item" value="5">5 Minutes</a></li>
+                    <li><a class="dropdown-item options-autosave-dropdown-item" value="10">10 Minutes</a></li>
+                    <li><a class="dropdown-item options-autosave-dropdown-item" value="15">15 Minutes</a></li>
+                    <li><a class="dropdown-item options-autosave-dropdown-item" value="20">20 Minutes</a></li>
+                </ul>
+              </div>
+        </div>
+
         <div class="row mt-1" id="options-intellisense-belts-enabled">
             <h6 class="text-start">Enabled for:</h6>
-            
         </div>
+        
 
         <!-- LINKS -->
         <h4 class="mt-4">Embeded Links</h4>

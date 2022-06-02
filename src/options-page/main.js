@@ -21,7 +21,7 @@ window.addEventListener("load", async () => {
             document.getElementById("signup-button").addEventListener("click",(e)=>{
                 if(settings.PASSWORD){return;}
                 const password = document.getElementById("password-signup").value;
-                GlobalSetting.Set(GlobalSetting.PASSWORD.key, password).then(()=>{
+                GlobalSetting.PASSWORD.Set(password).then(()=>{
                     //show options page
                     initOptions();
                     hide(document.getElementById("sign-up"))
@@ -68,13 +68,15 @@ function initOptions(){
         createBeltLinkElement(beltKey, "options-belt-end-links", GlobalSetting.END_OF_BELT_QUIZ.key);
     }
 
+    initAutoSave();
+
     //add event listeners
     document.getElementById("options-password-button").addEventListener("click",(e)=>{
         //check password isnt blank
         const passwordEl = document.getElementById("options-password-input");
         if(passwordEl.value){
             //save password
-            GlobalSetting.Set(GlobalSetting.PASSWORD.key, passwordEl.value).then(()=>{
+            GlobalSetting.PASSWORD.Set(passwordEl.value).then(()=>{
                 //show saved message
                 passwordEl.value = ""
                 alert("Password saved!")
@@ -86,19 +88,42 @@ function initOptions(){
     })
 
     document.getElementById("options-reset-button").addEventListener("click",(e)=>{
+        // TODO
         //reset values
-        GlobalSetting.Set(GlobalSetting.PASSWORD.key, passwordEl.value).then(()=>{
+        GlobalSetting.PASSWORD.Set(GlobalSetting.PASSWORD.defaultValue).then(()=>{
             //refresh page
+            location.reload();
         })
     })
 
     intellisenseCase.addEventListener("change",(e)=>{
         //set intellisense case sensitive
-        GlobalSetting.Set(GlobalSetting.CASE_SENSITIVE.key, intellisenseCase.checked)
+        settings[GlobalSetting.CASE_SENSITIVE.key] = intellisenseCase.checked;
+        GlobalSetting.CASE_SENSITIVE.Set(intellisenseCase.checked)
     })
 
     //show options
     show(document.getElementById("options"))
+}
+
+function initAutoSave(){
+    //checkbox
+    document.getElementById("options-scene-autoSaveEnabled").checked = settings[GlobalSetting.AUTO_SAVE_ENABLED.key];
+    document.getElementById("options-scene-autoSaveEnabled").addEventListener("change",(e)=>{
+        settings[GlobalSetting.AUTO_SAVE_ENABLED.key] = e.target.checked;
+        GlobalSetting.AUTO_SAVE_ENABLED.Set(e.target.checked);
+    })
+    //dropdown
+    document.getElementById("options-autosave-dropdown-button").innerText = settings[GlobalSetting.AUTO_SAVE_INTERVAL.key] + " minutes";
+    let listItems = document.getElementsByClassName("options-autosave-dropdown-item");
+    for (let listItem of listItems){
+        listItem.addEventListener("click",(e)=>{
+            let value = listItem.getAttribute("value");
+            settings[GlobalSetting.AUTO_SAVE_INTERVAL.key] = value;
+            GlobalSetting.AUTO_SAVE_INTERVAL.Set(value);
+            document.getElementById("options-autosave-dropdown-button").innerText = value + " minutes";
+        })
+    }
 }
 
 function createBeltIntellisenseElements(beltKey){
@@ -125,7 +150,7 @@ function createBeltIntellisenseElements(beltKey){
     //event listener
     input.addEventListener("change",(e)=>{
         settings[GlobalSetting.INTELLISENSE_ENABLED_PER_BELT.key][beltKey] = e.target.checked;
-        GlobalSetting.Set(GlobalSetting.INTELLISENSE_ENABLED_PER_BELT.key, settings[GlobalSetting.INTELLISENSE_ENABLED_PER_BELT.key]);
+        GlobalSetting.INTELLISENSE_ENABLED_PER_BELT.Set(settings[GlobalSetting.INTELLISENSE_ENABLED_PER_BELT.key]);
     })
 }
 

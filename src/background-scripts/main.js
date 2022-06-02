@@ -1,7 +1,7 @@
 //import background scripts
 import Intellisense from "./intellisense.js";
 import Dom from "./dom.js";
-
+import Scene from "./scene.js";
 
 //executes function in main 'world'
 async function execScript(tabId, func, args=[]) {
@@ -47,6 +47,17 @@ chrome.runtime.onMessage.addListener((data, sender, sendResponse) => {
                 
             }
         })
-      }
+    }else if (data.type === "scene") {
+        //get method
+        getCurrentTab().then(tab => {
+            if(tab && data.message){
+                const func = Scene.onMessage(data.message);
+                if(func){
+                    execScript(tab.id, func, [data]);
+                }
+                
+            }
+        })
+    }
     return true;
 });

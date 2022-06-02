@@ -10,15 +10,31 @@ class Setting{
         return new Promise((resolve, reject)=>{
             if(this.local){
                 LocalSetting.Get(this.key).then(value=>{
-                    resolve(value[this.key]);
+                    let res = value[this.key] ?? this.defaultValue;
+                    resolve(res);
                 })
             }else{
                 GlobalSetting.Get(this.key).then(value=>{
-                    resolve(value[this.key]);
+                    let res = value[this.key] ?? this.defaultValue;
+                    resolve(res);
                 })
             }
         })
-    }   
+    }
+
+    Set(value){
+        return new Promise((resolve, reject)=>{
+            if(this.local){
+                LocalSetting.Set(this.key, value).then(value=>{
+                    resolve(value);
+                })
+            }else{
+                GlobalSetting.Set(this.key, value).then(value=>{
+                    resolve(value);
+                })
+            }
+        })
+    }
 }
 
 
@@ -33,7 +49,8 @@ BELTS.forEach(b => {
 export class GlobalSetting {
     static CASE_SENSITIVE = new Setting('CASE_SENSITIVE', false);
     static PASSWORD = new Setting('PASSWORD', null);
-    static AUTO_SAVE_INCREMENT = new Setting('AUTO_SAVE_INCREMENT', 5);
+    static AUTO_SAVE_INTERVAL = new Setting('AUTO_SAVE_INTERVAL', 1);
+    static AUTO_SAVE_ENABLED = new Setting('AUTO_SAVE_ENABLED', true);
     static PROVE_YOURSELF_SOS = new Setting('PROVE_YOURSELF_SOS', defaultLinkValues);
     static END_OF_BELT_QUIZ = new Setting('END_OF_BELT_QUIZ', defaultLinkValues);
     static INTELLISENSE_ENABLED_PER_BELT = new Setting("INTELLISENSE_ENABLED_PER_BELT", defaultEnabledValues);

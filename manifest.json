@@ -24,7 +24,7 @@
 
     "content_scripts": [{
         "matches":    ["*://*/*"],
-        "js":         ["./dist/content-scripts/intellisense.js","./dist/content-scripts/dom.js"]
+        "js":         ["./dist/content-scripts/intellisense.js","./dist/content-scripts/dom.js","./dist/content-scripts/scene.js"]
     },{
         "css": [ "./main.css" ],
         "matches":    ["*://*/*"]
