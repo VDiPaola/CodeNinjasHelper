@@ -22,7 +22,29 @@
     display: flex;
     width: 100%;
     overflow: hidden;
+    padding: 10px;
+    align-items: center;
 }
+
+/* width */
+.CodeNinjasHelper::-webkit-scrollbar {
+    width: 10px;
+  }
+  
+  /* Track */
+  .CodeNinjasHelper::-webkit-scrollbar-track {
+    background: #f1f1f1; 
+  }
+   
+  /* Handle */
+  .CodeNinjasHelper::-webkit-scrollbar-thumb {
+    background: #888; 
+  }
+  
+  /* Handle on hover */
+  .CodeNinjasHelper::-webkit-scrollbar-thumb:hover {
+    background: #555; 
+  }
 
 .CodeNinjasHelper > div > span{
     color:gray;
@@ -55,3 +77,4 @@
 .custom-form{
     display: flex;
 }
+

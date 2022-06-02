@@ -163,7 +163,7 @@ function initFunc(){
   const editor = window.ace.edit("ws");
   //get keybindings to override
   const keyBindings = editor.commands.commandKeyBinding;
-  const keyBindingKeys = ["up", "down"];
+  const keyBindingKeys = ["up", "down", "tab"];
 
   //set default object for options
   window.codeNinjasHelper = {commandBindingsOn: true};

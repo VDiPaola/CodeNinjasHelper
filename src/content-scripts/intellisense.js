@@ -62,7 +62,7 @@ const inputEventListener = (e) => {
     if(el.tagName == "TEXTAREA" || el.tagName == "INPUT"){
         //check for enter press
         
-        if( (e.code == "Enter" || e.code == "ArrowUp" || e.code == "ArrowDown") && intellisense.isVisible() && intellisense.container.children.length > 0){
+        if( (e.code == "Enter" || e.code == "Tab" || e.code == "ArrowUp" || e.code == "ArrowDown") && intellisense.isVisible() && intellisense.container.children.length > 0){
             e.preventDefault();
             e.stopPropagation();
             //insert intellisense if available
@@ -73,6 +73,7 @@ const inputEventListener = (e) => {
                 case "ArrowDown":
                     intellisense.onDownArrow();
                     break;
+                case "Tab":
                 case "Enter":
                     intellisense.submit(intellisense.container.children[intellisense.currentlySelectedIndex]);
                     break;
