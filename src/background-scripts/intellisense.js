@@ -41,7 +41,7 @@ function insertText({value}){
     if(line.includes("[cursor]")) {
       //get cursor position and remove from string
       cursorCol = line.indexOf("[cursor]");
-      if(index === 0) {cursorCol += unsplitLine.length;}
+      if(index === 0) {cursorCol += editor.selection.getCursor().column;}
       //adds 1 assumes it needs to tab out (fix this)
       else{cursorCol += (tabCounter+1) * tabSize;}
       cursorRow = lines.length - 2 - index;
@@ -134,29 +134,6 @@ function getCurrentWord(){
   const line = editor.session.getTextRange(new Range(range.row, 0, range.row, range.column));
   //get current word without tabs
   return line.slice(line.lastIndexOf(" ") + 1).trim();
-}
-
-function onChange(){
-  const editor = window.ace.edit("ws");
-  const Range = window.ace.require("ace/range").Range;
-    
-  //chrome.runtime.sendMessage(delta);
-  const range = editor.find("if",{
-    backwards: true,
-    wrap: false,
-    caseSensitive: false,
-    wholeWord: false,
-    regExp: false
-  });
-  if (range) {
-    //editor.insert("Something cool");
-  }
-  // // editor.findNext();
-  // // editor.findPrevious();
-  // editor.replaceAll("if () {}");
-      
-  return;
-  editor.session.replace(new Range(0, 0, 1, 1), "abc");
 }
 
 //editor.setValue("text2", -1); // set value and move cursor to the start of the text
