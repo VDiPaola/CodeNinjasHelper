@@ -16,8 +16,8 @@ export const Dictionary = {
     "$this.opacity()": "$this.opacity([cursor])",
     "$this.visible()": "$this.visible([cursor])",
     "$this.draggable()": "$this.draggable([cursor])",
-    "$this.toggleVisible()": "$this.toggleVisible()",
-    "$this.toggleDraggable()": "$this.toggleDraggable()",
+    "$this.toggleVisible()": "$this.toggleVisible()[cursor]",
+    "$this.toggleDraggable()": "$this.toggleDraggable()[cursor]",
     "$this.rotation()": "$this.rotation([cursor])",
     
 }

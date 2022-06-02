@@ -25,6 +25,7 @@ export class Intellisense {
         if(this.currentlySelectedIndex > 0){
             this.currentlySelectedIndex--;
             this.updateSelected();
+            this.updateScroll();
         }
     }
 
@@ -32,7 +33,14 @@ export class Intellisense {
         if(this.currentlySelectedIndex < this.container.children.length - 1){
             this.currentlySelectedIndex++;
             this.updateSelected();
+            this.updateScroll();
         }
+    }
+
+    updateScroll(){
+        //update scroll
+        this.container.scrollTop = this.container.children[this.currentlySelectedIndex].getBoundingClientRect().top - 
+        (this.container.children[this.currentlySelectedIndex].offsetHeight * 3) - this.container.getBoundingClientRect().top;
     }
 
     updateSelected(){
@@ -82,21 +90,24 @@ export class Intellisense {
         for(let key of keys){
             let startsWith = this.caseSensitive ? key.startsWith(curWord) : key.toLowerCase().startsWith(curWord.toLowerCase());
             if(startsWith){
-                this.append(key, curWord.length, textAreaEl);
+                const value = this.filterDictValue(Dictionary[key]);
+                if(!curWord.includes(value)){
+                    this.append(key, curWord.length, textAreaEl, value);
+                }
             }
         }
 
         this.show(cursorPos, textAreaEl);
     }
 
-    append = (key, inputLength, textAreaEl) => {
+    append = (key, inputLength, textAreaEl, filteredValue=null) => {
         //create intellisense entry
         let newDiv = document.createElement("div");
         let newSpan = document.createElement("span");
         let newSpan2 = document.createElement("span");
 
         newSpan.textContent = key;
-        newSpan2.textContent = this.filterDictValue(Dictionary[key]);
+        newSpan2.textContent =  filteredValue ?? this.filterDictValue(Dictionary[key]);
         newDiv.appendChild(newSpan);
         newDiv.appendChild(newSpan2);
 
@@ -121,11 +132,10 @@ export class Intellisense {
     }
 
     filterDictValue = (value) => {
-        let returnValue = value;
         for(let tag of tags){
-            returnValue = returnValue.replace(tag, "");
+            value = value.replace(tag, "");
         }
-        return returnValue;
+        return value;
     }
 
 

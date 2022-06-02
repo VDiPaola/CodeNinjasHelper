@@ -10,7 +10,7 @@
     background-color: var(--unselected-bg-color);
     z-index: 100000;
     display: none;
-    max-width: 20vw;
+    width: 10vw;
     max-height: 20vh;
     overflow-y: auto;
     overflow-x: hidden;
@@ -22,8 +22,9 @@
     display: flex;
     width: 100%;
     overflow: hidden;
-    padding: 10px;
     align-items: center;
+    padding: 1px 5px;
+    min-height: 20px;
 }
 
 /* width */
