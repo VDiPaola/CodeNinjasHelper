@@ -2,6 +2,7 @@ export class Editor {
 
     static init(){
         this.sendMessage({message: "init"});
+        
     }
 
     static setCommandBindingsOn(value){

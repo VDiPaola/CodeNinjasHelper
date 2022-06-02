@@ -1,7 +1,9 @@
 import { Editor } from "./classes/Editor";
 import { Intellisense } from "./classes/Intellisense";
-import {waitForElement} from "./classes/Helpers";
+//import {waitForElement} from "./classes/Helpers";
 import {GlobalSetting, BELTS} from "../classes-shared/Settings";
+
+let intellisense;
 
 window.addEventListener("load", async () => {
     //wait for editor to load
@@ -29,47 +31,77 @@ window.addEventListener("load", async () => {
 })
 
 
-function startIntellisense(){
-    waitForElement(".ace_text-input").then((textInputElement) => {
-        //setup objects
-        const intellisense = new Intellisense();
-        Editor.init();
-        Editor.setTheme("ace/theme/twilight");
+const waitForElement = (selector, callback) => {
 
-        textInputElement.addEventListener("keydown", function(e){
-            const el = e.target;
-            if(el.tagName == "TEXTAREA" || el.tagName == "INPUT"){
-                //check for enter press
-                
-                if( (e.code == "Enter" || e.code == "ArrowUp" || e.code == "ArrowDown") && intellisense.isVisible() && intellisense.container.children.length > 0){
-                    e.preventDefault();
-                    e.stopPropagation();
-                    //insert intellisense if available
-                    switch(e.code){
-                        case "ArrowUp":
-                            intellisense.onUpArrow();
-                            break;
-                        case "ArrowDown":
-                            intellisense.onDownArrow();
-                            break;
-                        case "Enter":
-                            intellisense.submit(intellisense.container.children[intellisense.currentlySelectedIndex]);
-                            break;
+    if (document.querySelector(selector)) {
+        callback(document.querySelector(selector));
+    }
+
+    const observer = new MutationObserver((mutationList, _) => {
+        for(const mutation of mutationList) {
+            if (mutation.type === 'childList') {
+                for (const node of mutation.addedNodes) {
+                    if (node.nodeType === 1 && node.matches(selector)) {
+                        callback(node);
                     }
-                }else{
-                    //check for intellisense
-                    Editor.getIntellisenseData().then(({curWord, cursorPos}) => {
-                        if(curWord && cursorPos){
-                            intellisense.check(curWord, cursorPos, el);
-                        }else{
-                            intellisense.hide();
-                        }
-                    })
                 }
-                
-            }else{
-                intellisense.hide();
             }
-        })
+        }
+    });
+
+    // Options for the observer (which mutations to observe)
+    const config = { attributes: false, childList: true, subtree: true };
+
+    // Start observing the target node for configured mutations
+    observer.observe(document.body, config);
+
+}
+
+const inputEventListener = (e) => {
+    const el = e.target;
+    if(el.tagName == "TEXTAREA" || el.tagName == "INPUT"){
+        //check for enter press
+        
+        if( (e.code == "Enter" || e.code == "ArrowUp" || e.code == "ArrowDown") && intellisense.isVisible() && intellisense.container.children.length > 0){
+            e.preventDefault();
+            e.stopPropagation();
+            //insert intellisense if available
+            switch(e.code){
+                case "ArrowUp":
+                    intellisense.onUpArrow();
+                    break;
+                case "ArrowDown":
+                    intellisense.onDownArrow();
+                    break;
+                case "Enter":
+                    intellisense.submit(intellisense.container.children[intellisense.currentlySelectedIndex]);
+                    break;
+            }
+        }else{
+            //check for intellisense
+            Editor.getIntellisenseData().then(({curWord, cursorPos}) => {
+                if(curWord && cursorPos){
+                    intellisense.check(curWord, cursorPos, el);
+                }else{
+                    intellisense.hide();
+                }
+            })
+        }
+        
+    }else{
+        intellisense.hide();
+    }
+}
+
+const startIntellisense = () => {
+    waitForElement(".ace_text-input", (inputElement)=>{
+        //setup objects
+        if(!intellisense){
+            intellisense = new Intellisense();
+            Editor.init();
+        }
+        
+        inputElement.removeEventListener("keydown", inputEventListener);
+        inputElement.addEventListener("keydown", inputEventListener)
     })
 }

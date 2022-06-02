@@ -16,7 +16,7 @@ export class Intellisense {
 		this.offsetY = rect.top;
 
         
-        this.caseSensitive = false; //case sensitive for checking intellisense
+        this.caseSensitive = true; //case sensitive for checking intellisense (false not currently implemented properly)
         this.currentlySelectedKey = null; //currently selected Dictionary key
         this.currentlySelectedIndex = 0;
     }
