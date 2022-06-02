@@ -10,9 +10,6 @@
     },
 
     "permissions": [
-        "tabs",
-        "contextMenus",
-        "activeTab",
         "scripting",
         "storage"
     ],
@@ -23,11 +20,11 @@
     },
 
     "content_scripts": [{
-        "matches":    ["*://*/*"],
+        "matches":    ["*://gdp.code.ninja/*","*://dojo.code.ninja/*"],
         "js":         ["./dist/content-scripts/intellisense.js","./dist/content-scripts/dom.js","./dist/content-scripts/scene.js"]
     },{
         "css": [ "./main.css" ],
-        "matches":    ["*://*/*"]
+        "matches":    ["*://gdp.code.ninja/*","*://dojo.code.ninja/*"]
      } ],
 
      "host_permissions": [
