@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "build": "webpack --config /webpack.config.js",
+    "build": "webpack --config ./webpack.config.js",
     "publish": "powershell compress-archive -Force './options-page','./popup','./dist','./manifest.json','./bootstrap.js','./main.css','./icon.png' DojoHelper.zip"
   },
   "author": "",

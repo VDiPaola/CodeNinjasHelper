@@ -103,6 +103,13 @@ const startIntellisense = () => {
         }
         
         inputElement.removeEventListener("keydown", inputEventListener);
-        inputElement.addEventListener("keydown", inputEventListener)
+        inputElement.addEventListener("keydown", inputEventListener);
+
+        //click event for closing intellisense
+        document.addEventListener("click", (e)=>{
+            if(!intellisense.container.contains(e.target)){
+                intellisense.hide();
+            }
+        })
     })
 }
