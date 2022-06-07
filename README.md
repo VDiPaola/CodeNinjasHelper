@@ -14,7 +14,7 @@ npm run build
 - make sure you have ran npm run build
 - set version in package.json
 - push to github
-- run zip builder or zip all files apart from /src, /node_modules, webpack.config.js and stuff.txt
+- npm run publish or zip correct files and folders (can check the publish command in package.json)
 
 ## Options
 to get to options right click on the extension icon and select options.
