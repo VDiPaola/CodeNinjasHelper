@@ -43,13 +43,14 @@ if(window.location.pathname.includes("/students/cn-cambridge-cam-uk/")){
     
 }else if(window.location.pathname.includes("/Scenes/Play/")){
     //inside scene page
-    waitForElement(".ace_text-input").then(inputEl => {
-        //go through array of ids and scripts to replace
-        for(let id of Object.keys(Elements)){
-            const el = document.querySelector("#" + id);
+    
+    //go through array of ids and scripts to replace
+    for(let id of Object.keys(Elements)){
+        waitForElement("#" + id).then(el => {
             if(el){
                 chrome.runtime.sendMessage({type:"dom", id, script: Elements[id], message:"replaceScript"});
             }
-        }
-    })
+        })
+        
+    }
 }

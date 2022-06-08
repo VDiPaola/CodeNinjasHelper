@@ -124,10 +124,10 @@ const Object_General = `
         <div class="form-group" data-bind="visible : selectedObject().scaleX">
             <label class="">Scale X</label>
             <input type="number" step="0.01" value="1" class="form-control" oninput="((v)=>{
-                if(v == 0){return;}
+                let s = String(v)
+                if(v == 0 || s[s.length-1] == '.'){return;}
                 v = v == 0 ? 0.01 : v;
-                viewModel.scene().selectedObject().scaleX(v);
-                this.value = v;
+                viewModel.scene().selectedObject().scaleX(Number(v));
             })(this.value)"  />
         </div>
         <div class="form-group" data-bind="visible : selectedObject().scaleY">
@@ -241,8 +241,24 @@ const GO_Position = `
 </div>
 `
 
+const objectRow = `
+<li onclick="event.preventDefault()" data-bind="css : { active : $data == scene.selectedObject()},click: scene.selectObject, visible: scene.mode() == 'EDIT' || playerVisibleInTree" class="list-group-item padding-left-4 padding-right-0 border-gray border-radius-0  border-bottom-0 border-top-1 border-left-5 border-right-0 clearfix text-scene">
+<div class="list-group-item-heading clearfix">
+    <div class="pull-left">
+        <i data-bind="click: toggleShowChildren ,css: { 'fa-circle-o' : objects().length == 0, 'fa-minus-circle' : objects().length > 0 && showChildren(), 'fa-plus-circle' : objects().length > 0 && !showChildren() }" class="fa"></i> &nbsp;
+        <a onclick="event.preventDefault()" href="#" data-bind="css : { active : $data == scene.selectedObject()}" class="object-link" ><span data-bind="text: name"></span> (<span data-bind="text: displayType"></span>)</a>
+    </div>
+
+</div>
+<div class="list-group-item-text" data-bind="visible: objects().length > 0 && showChildren">
+    <ul data-bind="template: { name: 'object-row', foreach: objects }" class="sub-object-list padding-left-0 list-group border-radius-0 border-gray  padding-right-0  border-0"></ul>
+</div>
+</li>
+`
+
 export const Elements = {
     props_STAR,
     Object_General,
-    GO_Position
+    GO_Position,
+    "object-row": objectRow
 }
