@@ -123,7 +123,7 @@ const Object_General = `
         </div>
         <div class="form-group" data-bind="visible : selectedObject().scaleX">
             <label class="">Scale X</label>
-            <input type="number" step="0.01" value="1" class="form-control" oninput="((v)=>{
+            <input type="number" step="0.01" data-bind="attr: {placeholder: selectedObject().scaleX}" class="form-control" oninput="((v)=>{
                 let s = String(v)
                 if(v == 0 || s[s.length-1] == '.'){return;}
                 v = v == 0 ? 0.01 : v;
@@ -132,16 +132,18 @@ const Object_General = `
         </div>
         <div class="form-group" data-bind="visible : selectedObject().scaleY">
             <label class="">Scale Y</label>
-            <input type="number" step="0.01" value="1" class="form-control" oninput="((v)=>{
-                if(v == 0){return;}
+            <input type="number" step="0.01" data-bind="attr: {placeholder: selectedObject().scaleY}" class="form-control" oninput="((v)=>{
+                let s = String(v)
+                if(v == 0 || s[s.length-1] == '.'){return;}
                 v = v == 0 ? 0.01 : v;
-                viewModel.scene().selectedObject().scaleY(v);
-                this.value = v;
+                viewModel.scene().selectedObject().scaleY(Number(v));
             })(this.value)"  />
         </div>
         <div class="form-group" data-bind="visible : selectedObject().scaleY">
             <label class="">Opacity: <span data-bind="text:selectedObject().opacity"></span></label>
-            <input type="range" min="0" max="1" step="0.01" class="form-control" data-bind="value : selectedObject().opacity" />
+            <input type="range" min="0" max="1" step="0.01" class="form-control" data-bind="value : selectedObject().opacity"  oninput="((v)=>{
+                viewModel.scene().selectedObject().opacity(v);
+            })(this.value)"/>
         </div>
         <div class="form-group" data-bind="visible: mode() == 'EDIT'">
             <label><input type="checkbox" data-bind="checked: selectedObject().playerEditCode" /> Player Can Edit Code</label><br />
@@ -161,10 +163,7 @@ const GO_Position = `
     <div class="form-group">
         <div class="input-group">
             <label class="input-group-addon" title="Controls the left/right position of the object.">X</label>
-            <input type="number" class="form-control" data-bind="value : selectedObject().x" required value="400" oninput="((v)=>{
-                if(v == 0){return;}
-                viewModel.scene().selectedObject().x(v);
-            })(this.value)"/>
+            <input type="number" class="form-control" data-bind="value : selectedObject().x" required />
         </div>
     </div>
     <div class="form-group">
@@ -175,10 +174,7 @@ const GO_Position = `
     <div class="form-group">
         <div class="input-group">
             <label class="input-group-addon" title="Controls the up/down position of the object.">Y</label>
-            <input type="number" class="form-control" data-bind="value : selectedObject().y" required value="300" oninput="((v)=>{
-                if(v == 0){return;}
-                viewModel.scene().selectedObject().y(v);
-            })(this.value)"/>
+            <input type="number" class="form-control" data-bind="value : selectedObject().y" required />
         </div>
     </div>
     <div class="form-group">
