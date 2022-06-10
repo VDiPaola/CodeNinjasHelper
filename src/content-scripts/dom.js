@@ -54,7 +54,8 @@ if(window.location.pathname.includes("/students/cn-cambridge-cam-uk/")){
     }
 
     //insert error div
-    waitForElement(".tab-content").then(el => {
-        elementBuilder("div", {className: "alert alert-danger position-absolute w-100 top-50", textContent: "The game is running"}, el);
+    waitForElement("#events").then(el => {
+        //elementBuilder("div", {className: "alert alert-danger position-absolute w-100 top-50", textContent: "The game is running"}, el);
+        el.innerHTML += '<div class="alert alert-danger text-center" data-bind="visible: $root.scene().state() == Scene.STATE_PLAY" style="position:absolute;width:97.5%;top:50%;z-index:1000">The game is running</div>'
     })
 }
