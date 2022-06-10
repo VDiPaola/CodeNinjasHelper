@@ -81,6 +81,8 @@ const inputEventListener = (e) => {
         }else{
             //check for intellisense
             Editor.getIntellisenseData().then(({curWord, cursorPos}) => {
+                //filter curword
+                curWord = curWord.length > 1 && curWord[0] == "(" ? curWord.substring(1) : curWord;
                 if(curWord && cursorPos){
                     intellisense.check(curWord, cursorPos, el);
                 }else{
