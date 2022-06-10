@@ -1,5 +1,6 @@
 import {Dictionary, tags} from "../dictionary";
 import {Editor} from "./Editor";
+import { elementBuilder } from "./Helpers";
 
 
 
@@ -9,6 +10,7 @@ export class Intellisense {
         this.container = document.createElement("div");
         this.container.className = "CodeNinjasHelper";
         document.body.appendChild(this.container);
+
 
         //get offset position of the editor
         const rect = document.getElementsByClassName("ace_text-input")[0].getBoundingClientRect();
@@ -45,11 +47,15 @@ export class Intellisense {
 
     updateSelected(){
         //clear all selected
-        for(let i = 0; i < this.container.children.length; i++){
-            this.container.children[i].classList.remove("selected");
-        }
+        let el = this.container.querySelector(".selected");
+        if(el){ el.remove(); }
         //select current
-        this.container.children[this.currentlySelectedIndex].classList.add("selected");
+        let parentEl = this.container.children[this.currentlySelectedIndex]
+        let newSpan2 = document.createElement("span");
+        newSpan2.classList.add("selected");
+        newSpan2.innerText = "Press Enter or Tab";
+        parentEl.appendChild(newSpan2);
+
     }
 
     show(cursorPos, textAreaEl){
@@ -104,12 +110,9 @@ export class Intellisense {
         //create intellisense entry
         let newDiv = document.createElement("div");
         let newSpan = document.createElement("span");
-        let newSpan2 = document.createElement("span");
 
         newSpan.textContent = key;
-        newSpan2.textContent =  filteredValue ?? this.filterDictValue(Dictionary[key]);
         newDiv.appendChild(newSpan);
-        newDiv.appendChild(newSpan2);
 
         newDiv.setAttribute("value", key);
         newDiv.setAttribute("inputLength", inputLength);
@@ -127,8 +130,8 @@ export class Intellisense {
 
 
         //append and add class
-        if(this.container.children.length === 0) newDiv.classList.add("selected");
         this.container.appendChild(newDiv);
+        this.updateSelected();
     }
 
     filterDictValue = (value) => {

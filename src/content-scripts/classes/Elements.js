@@ -252,9 +252,27 @@ const objectRow = `
 </li>
 `
 
+const props_CIRCLE = `
+<div class="panel panel-default margin-bottom-0 margin-top-0">
+<div class="panel-heading"><span class="panel-heading-title">Circle</span></div>
+<div class="panel-body">
+    <div class="form-group">
+        <label>Radius</label>
+        <input type="number" min="1" class="form-control" data-bind="attr: {placeholder: selectedObject().radius}" oninput="((v)=>{
+            let s = String(v)
+            if(v == 0 || s[s.length-1] == '.'){return;}
+            v = v < 1 ? 1 : v;
+            viewModel.scene().selectedObject().radius(Number(v));
+        })(this.value)" />
+    </div>
+</div>
+</div>
+`
+
 export const Elements = {
     props_STAR,
     Object_General,
     GO_Position,
-    "object-row": objectRow
+    "object-row": objectRow,
+    props_CIRCLE,
 }

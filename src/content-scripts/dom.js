@@ -51,6 +51,10 @@ if(window.location.pathname.includes("/students/cn-cambridge-cam-uk/")){
                 chrome.runtime.sendMessage({type:"dom", id, script: Elements[id], message:"replaceScript"});
             }
         })
-        
     }
+
+    //insert error div
+    waitForElement(".tab-content").then(el => {
+        elementBuilder("div", {className: "alert alert-danger position-absolute w-100 top-50", textContent: "The game is running"}, el);
+    })
 }

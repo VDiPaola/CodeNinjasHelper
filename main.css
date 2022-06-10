@@ -79,3 +79,9 @@
     display: flex;
 }
 
+.dojo-helper-error *{
+    display:"block";
+    width:"100%";
+    position:"absolute";
+    top:"10%";
+}
