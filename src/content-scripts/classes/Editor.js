@@ -9,6 +9,10 @@ export class Editor {
         this.sendMessage({message: "setCommandBindingsOn", value:value});
     }
 
+    static checkBrackets(){
+        this.sendMessage({message: "checkBrackets"});
+    }
+
 
     static setTheme(theme) {
         this.sendMessage({message: "setTheme", value: theme});

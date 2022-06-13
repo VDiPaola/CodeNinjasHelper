@@ -68,7 +68,7 @@ function getAllText(){
   //returns all text in editor
   const editor = window.ace.edit("ws");
 
-  editor.insert(value);
+  //editor.insert(value);
   return editor.getValue();
 }
 
@@ -183,6 +183,24 @@ function setCommandBindingsOn({value}){
   window.codeNinjasHelper.commandBindingsOn = value;
 }
 
+function checkBrackets(){
+  //if even number of brackets then move cursor 1 to the right
+  const editor = window.ace.edit("ws");
+  //get current line
+  const line = editor.session.getLine(editor.selection.getCursor().row);
+  //get number of brackets
+  const openBrackets = line.match(/\(/g);
+  const closedBrackets = line.match(/\)/g);
+
+  if(openBrackets?.length === closedBrackets?.length){
+    //move cursor by 1
+    editor.selection.moveCursorBy(0, 1);
+  }else{
+    //insert closed bracket
+    editor.insert(")");
+  }
+}
+
 
 export default class Intellisense{
   static onMessage(message){
@@ -215,6 +233,12 @@ export default class Intellisense{
         return initFunc;
       case "setCommandBindingsOn":
         return setCommandBindingsOn;
+      case "toggleUseWrapMode":
+        return toggleUseWrapMode;
+      case "getUseWrapMode":
+        return getUseWrapMode;
+      case "checkBrackets":
+        return checkBrackets;
     }
     
   }

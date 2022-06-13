@@ -78,6 +78,10 @@ const inputEventListener = (e) => {
                     intellisense.submit(intellisense.container.children[intellisense.currentlySelectedIndex]);
                     break;
             }
+        }else if(e.code == "Digit0" && intellisense.isShiftDown){
+            e.preventDefault();
+            e.stopPropagation();
+            Editor.checkBrackets();
         }else{
             //check for intellisense
             Editor.getIntellisenseData().then(({curWord, cursorPos}) => {

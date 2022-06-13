@@ -21,6 +21,19 @@ export class Intellisense {
         this.caseSensitive = true; //case sensitive for checking intellisense (false not currently implemented properly)
         this.currentlySelectedKey = null; //currently selected Dictionary key
         this.currentlySelectedIndex = 0;
+        this.isShiftDown = false;
+
+        document.body.addEventListener("keydown", (e) => {
+            if(e.code == "ShiftLeft" || e.code == "ShiftRight"){
+                this.isShiftDown = true;
+            }
+        });
+        document.body.addEventListener("keyup", (e) => {
+            if(e.code == "ShiftLeft" || e.code == "ShiftRight"){
+                this.isShiftDown = false;
+            }
+        });
+        
     }
 
     onUpArrow(){
