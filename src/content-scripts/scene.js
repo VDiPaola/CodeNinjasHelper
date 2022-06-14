@@ -3,6 +3,7 @@ import {GlobalSetting} from '../classes-shared/Settings';
 class Scene{
     constructor(){
         this.#save();
+        this.#subscribeChanges();
     }
 
     #save(){
@@ -19,6 +20,10 @@ class Scene{
             //run again
             setTimeout(()=>{this.#save()}, 60000 * this.autoSaveInterval);
         })
+    }
+
+    #subscribeChanges(){
+        chrome.runtime.sendMessage({type:"scene", message:"subscribeChanges"});
     }
 }
 

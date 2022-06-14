@@ -32,8 +32,7 @@ export const ObjectDictionary = {
     },
     GO_SCENE:{
         stopCode: "stopCode()",
-        startCode: "startCode()",
-        state: "state([cursor])",
+        state: "state()",
     },
     STAR:{
         numPoints: "numPoints([cursor])",

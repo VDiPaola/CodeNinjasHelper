@@ -120,7 +120,13 @@ function getIntellisenseData(){
     //get current word without period
     const curWordNoPeriod = curWord.slice(0, curWord.length-1);
     //see if current word is an object
-    let curObject = curWordNoPeriod == "$this" ? viewModel.scene().selectedObject() : null;
+    let curObject = null;
+    if(curWordNoPeriod == "$this"){
+      curObject = viewModel.scene().selectedObject();
+    }else if(curWordNoPeriod == "$this.scene"){
+      curObject = viewModel.scene()
+    }
+
     if(!curObject){
       const objects = viewModel.scene().allChildren(viewModel.scene().objects())
       for(let object of objects){
@@ -131,6 +137,7 @@ function getIntellisenseData(){
       }
     }
 
+    //set object data to send back
     objectData.word = curWordNoPeriod
 
     objectData.displayType = curObject?.data?.displayType || null;
