@@ -1,24 +1,53 @@
 //intellisense dictionary
 export const Dictionary = {
-    "if": "if ([cursor]) {\n\n}",
-	"function": "function ([cursor]) {\n\n}",
-    "isKeyPressed": "isKeyPressed(Keys.[cursor])",
-    "createTimer": "createTimer(1000,function() {\n[cursor]\n})",
-    
-    "$this.x()": "$this.x([cursor])",
-    "$this.y()": "$this.y([cursor])",
-    "$this.speedX()": "$this.speedX([cursor])",
-    "$this.speedY()": "$this.speedY([cursor])",
-    "$this.scaleX()": "$this.scaleX([cursor])",
-    "$this.scaleY()": "$this.scaleY([cursor])",
-    "$this.width()": "$this.width([cursor])",
-    "$this.height()": "$this.height([cursor])",
-    "$this.opacity()": "$this.opacity([cursor])",
-    "$this.visible()": "$this.visible([cursor])",
-    "$this.draggable()": "$this.draggable([cursor])",
-    "$this.toggleVisible()": "$this.toggleVisible()[cursor]",
-    "$this.toggleDraggable()": "$this.toggleDraggable()[cursor]",
-    "$this.rotation()": "$this.rotation([cursor])",
-    
+    if: "if ([cursor]) {\n\n}",
+	function: "function ([cursor]) {\n\n}",
+    isKeyPressed: "isKeyPressed(Keys.[cursor])",
+    createTimer: "createTimer(1000,function() {\n[cursor]\n})",
 }
+
+const genericProperties = {
+    x: "x([cursor])",
+    y: "y([cursor])",
+    speedX: "speedX([cursor])",
+    speedY: "speedY([cursor])",
+    scaleX: "scaleX([cursor])",
+    scaleY: "scaleY([cursor])",
+    width: "width([cursor])",
+    height: "height([cursor])",
+    opacity: "opacity([cursor])",
+    visible: "visible([cursor])",
+    draggable: "draggable([cursor])",
+    toggleVisible: "toggleVisible()",
+    toggleDraggable: "toggleDraggable()",
+    rotation: "rotation([cursor])",
+}
+
+export const ObjectDictionary = {
+    GO_SHAPE:{
+        ...genericProperties,
+    },
+    GO_GROUP:{
+        ...genericProperties,
+    },
+    GO_SCENE:{
+        stopCode: "stopCode()",
+        startCode: "startCode()",
+        state: "state([cursor])",
+    },
+    STAR:{
+        numPoints: "numPoints([cursor])",
+    },
+    CIRCLE:{
+        radius: "numPoints([cursor])",
+    },
+    Keys:{
+        rightArrow: "rightArrow",
+        leftArrow: "leftArrow",
+        upArrow: "upArrow",
+        downArrow: "downArrow",
+        space: "space",
+    }
+}
+
 export const tags = ["[cursor]", "[tab]", "[highlightStart]", "[highlightEnd]"];

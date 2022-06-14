@@ -1,6 +1,5 @@
-import {Dictionary, tags} from "../dictionary";
+import {Dictionary, tags, ObjectDictionary} from "../dictionary";
 import {Editor} from "./Editor";
-import { elementBuilder } from "./Helpers";
 
 
 
@@ -11,12 +10,7 @@ export class Intellisense {
         this.container.className = "CodeNinjasHelper";
         document.body.appendChild(this.container);
 
-
-        //get offset position of the editor
-        const rect = document.getElementsByClassName("ace_text-input")[0].getBoundingClientRect();
-		this.offsetX = rect.x;
-		this.offsetY = rect.top;
-
+        this.setContainerPos();
         
         this.caseSensitive = true; //case sensitive for checking intellisense (false not currently implemented properly)
         this.currentlySelectedKey = null; //currently selected Dictionary key
@@ -34,6 +28,13 @@ export class Intellisense {
             }
         });
         
+    }
+
+    setContainerPos(){
+        //set starting offset position of the editor
+        const rect = document.getElementsByClassName("ace_text-input")[0].getBoundingClientRect();
+		this.offsetX = rect.x;
+		this.offsetY = rect.top;
     }
 
     onUpArrow(){
@@ -100,26 +101,40 @@ export class Intellisense {
         return this.container.style.display !== "none";
     }
 
-    check = (curWord, cursorPos, textAreaEl) => {
+    check = (curWord, cursorPos, objectData, textAreaEl) => {
         this.hide();
 
 
-        //lookup word in dictionary
-        const keys = Object.keys(Dictionary);
-        for(let key of keys){
-            let startsWith = this.caseSensitive ? key.startsWith(curWord) : key.toLowerCase().startsWith(curWord.toLowerCase());
-            if(startsWith){
-                const value = this.filterDictValue(Dictionary[key]);
-                if(!curWord.includes(value)){
-                    this.append(key, curWord.length, textAreaEl, value);
+        if(!objectData.word){
+            //lookup word in dictionary
+            const keys = Object.keys(Dictionary);
+            for(let key of keys){
+                let startsWith = this.caseSensitive ? key.startsWith(curWord) : key.toLowerCase().startsWith(curWord.toLowerCase());
+                if(startsWith){
+                    const value = this.filterDictValue(Dictionary[key]);
+                    if(!curWord.includes(value)){
+                        this.append(key, curWord.length, textAreaEl);
+                    }
                 }
             }
+        }else{
+            //lookup word in object dictionary (word, type, displayType)
+            const keys = Object.keys(objectData);
+            for(const objectDataKeys of keys){
+                const objectKey = objectData[objectDataKeys];
+                if(ObjectDictionary.hasOwnProperty(objectKey)){
+                    for(let key of Object.keys(ObjectDictionary[objectKey]) ){
+                        this.append(key, 0, textAreaEl, objectKey);
+                    }
+                }
+            }
+            
         }
 
         this.show(cursorPos, textAreaEl);
     }
 
-    append = (key, inputLength, textAreaEl, filteredValue=null) => {
+    append = (key, inputLength, textAreaEl, objectKey=null) => {
         //create intellisense entry
         let newDiv = document.createElement("div");
         let newSpan = document.createElement("span");
@@ -129,6 +144,7 @@ export class Intellisense {
 
         newDiv.setAttribute("value", key);
         newDiv.setAttribute("inputLength", inputLength);
+        if(objectKey){newDiv.setAttribute("objectKey", objectKey);}
 
         //submit on click
         newDiv.addEventListener("click", (e)=>{
@@ -158,7 +174,8 @@ export class Intellisense {
     submit = (el) => {
         //insert text in editor
         const key = el.getAttribute("value");
-        let text = Dictionary[key];
+        const objectKey = el.getAttribute("objectKey");
+        let text = objectKey ? ObjectDictionary[objectKey][key] : Dictionary[key];
 
         if(text){
             //get text without key in it

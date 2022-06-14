@@ -57,9 +57,12 @@ function insertText({value}){
     }
   });
 
-  //set cursor position
-  const cursorLine = editor.selection.getCursor().row - cursorRow;
-  editor.gotoLine(cursorLine, cursorCol, true);
+  if(cursorRow !== 0 && cursorCol !== 0){
+    //set cursor position
+    const cursorLine = editor.selection.getCursor().row - cursorRow;
+    editor.gotoLine(cursorLine, cursorCol, true);
+  }
+  
   
   
 }
@@ -99,7 +102,7 @@ function setFontSize({value}){
 }
 
 function getIntellisenseData(){
-  //returns current word and cursor position
+  //returns current word and cursor position and if its object
   const editor = window.ace.edit("ws");
   const Range = window.ace.require("ace/range").Range;
 
@@ -111,7 +114,35 @@ function getIntellisenseData(){
   const curWord = line.slice(line.lastIndexOf(" ") + 1).trim();
   const cursorPos = editor.selection.getCursor();
 
-  return {curWord, cursorPos};
+  //if word ends in a period, check if object
+  let objectData = {};
+  if(curWord[curWord.length-1] === "."){
+    //get current word without period
+    const curWordNoPeriod = curWord.slice(0, curWord.length-1);
+    //see if current word is an object
+    let curObject = curWordNoPeriod == "$this" ? viewModel.scene().selectedObject() : null;
+    if(!curObject){
+      const objects = viewModel.scene().allChildren(viewModel.scene().objects())
+      for(let object of objects){
+        if(object.name() === curWordNoPeriod){
+          curObject = object;
+          break;
+        }
+      }
+    }
+
+    objectData.word = curWordNoPeriod
+
+    objectData.displayType = curObject?.data?.displayType || null;
+    objectData.displayType = objectData.displayType === curWordNoPeriod ? null : objectData.displayType;
+
+    objectData.type = curObject?.data?.type || null;
+    objectData.type = objectData.type == "GO_TEXT" ? "LABEL" : objectData.type;
+    objectData.type = curObject?.data?.type == objectData.displayType ? null : objectData.type;
+    objectData.type = objectData.type === curWordNoPeriod ? null : objectData.type;
+  }
+
+  return {curWord, cursorPos, objectData};
   
 }
 
