@@ -149,7 +149,7 @@ function getIntellisenseData(){
     objectData.type = objectData.type === curWordNoPeriod ? null : objectData.type;
   }
 
-  return {curWord, cursorPos, objectData};
+  return {curWord, objectData};
   
 }
 
@@ -191,6 +191,7 @@ function getUseWrapMode({value}){
   const editor = window.ace.edit("ws");
   editor.session.getUseWrapMode();
 }
+
 
 function setTabSize({value}){
   const editor = window.ace.edit("ws");

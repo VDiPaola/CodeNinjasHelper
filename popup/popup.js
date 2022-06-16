@@ -32,4 +32,10 @@ async function getCurrentTab() {
         li.appendChild(a);
         ul.appendChild(li);
     }
+
+    //WRAP MODE BUTTON
+    let wrapMode = document.getElementById("wordWrap-button");
+    wrapMode.addEventListener("click", _=>{
+        chrome.runtime.sendMessage({type:"intellisense",message:"toggleUseWrapMode"});
+    })
 })()

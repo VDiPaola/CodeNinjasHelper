@@ -84,11 +84,11 @@ const inputEventListener = (e) => {
             Editor.checkBrackets();
         }else{
             //check for intellisense
-            Editor.getIntellisenseData().then(({curWord, cursorPos, objectData}) => {
+            Editor.getIntellisenseData().then(({curWord, objectData}) => {
                 //filter curword
                 curWord = curWord.length > 1 && curWord[0] == "(" ? curWord.substring(1) : curWord;
-                if(curWord && cursorPos){
-                    intellisense.check(curWord, cursorPos, objectData, el);
+                if(curWord){
+                    intellisense.check(curWord, objectData, el);
                 }else{
                     intellisense.hide();
                 }

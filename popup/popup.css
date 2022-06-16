@@ -321,3 +321,8 @@ a{
 [type=button], [type=reset], [type=submit], button {
     -webkit-appearance: button;
 }
+
+.text-nowrap {
+    white-space: nowrap!important;
+}
+

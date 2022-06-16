@@ -72,12 +72,13 @@ export class Intellisense {
 
     }
 
-    show(cursorPos, textAreaEl){
+    show(textAreaEl){
         if(this.container.children.length > 0){
             //position container
             const rect = textAreaEl.getBoundingClientRect();
-            this.container.style.top = ((cursorPos.row + 1) * rect.height) + this.offsetY + "px";
-            this.container.style.left = ((cursorPos.column) * rect.width) + this.offsetX + "px";
+            this.setContainerPos();
+            this.container.style.top = rect.height + this.offsetY + "px";
+            this.container.style.left = rect.width + this.offsetX + "px";
             //show
             this.container.style.display = "flex";
 
@@ -101,7 +102,7 @@ export class Intellisense {
         return this.container.style.display !== "none";
     }
 
-    check = (curWord, cursorPos, objectData, textAreaEl) => {
+    check = (curWord, objectData, textAreaEl) => {
         this.hide();
 
 
@@ -131,7 +132,7 @@ export class Intellisense {
             
         }
 
-        this.show(cursorPos, textAreaEl);
+        this.show(textAreaEl);
     }
 
     append = (key, inputLength, textAreaEl, objectKey=null) => {

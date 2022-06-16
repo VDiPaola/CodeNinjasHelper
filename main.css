@@ -57,7 +57,7 @@
 }
 
 
-.CodeNinjasHelper > div.selected{
+.CodeNinjasHelper div.selected{
     background-color: var(--selection-bg-color);
     cursor: pointer;
 }
