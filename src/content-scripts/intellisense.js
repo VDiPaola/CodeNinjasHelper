@@ -57,6 +57,19 @@ const waitForElement = (selector, callback) => {
 
 }
 
+const intellisenseCheck = (el)=>{
+    //check for intellisense
+    Editor.getIntellisenseData().then(({curWord, objectData}) => {
+        //filter curword
+        curWord = curWord.length > 1 && curWord[0] == "(" ? curWord.substring(1) : curWord;
+        if(curWord){
+            intellisense.check(curWord, objectData, el);
+        }else{
+            intellisense.hide();
+        }
+    })
+}
+
 const inputEventListener = (e) => {
     const el = e.target;
     if(el.tagName == "TEXTAREA" || el.tagName == "INPUT"){
@@ -75,7 +88,8 @@ const inputEventListener = (e) => {
                     break;
                 case "Tab":
                 case "Enter":
-                    intellisense.submit(intellisense.container.children[intellisense.currentlySelectedIndex]);
+                    intellisense.submit(intellisense.container.children[intellisense.currentlySelectedIndex])
+                    intellisenseCheck(el)
                     break;
             }
         }else if(e.code == "Digit0" && intellisense.isShiftDown){
@@ -83,16 +97,7 @@ const inputEventListener = (e) => {
             e.stopPropagation();
             Editor.checkBrackets();
         }else{
-            //check for intellisense
-            Editor.getIntellisenseData().then(({curWord, objectData}) => {
-                //filter curword
-                curWord = curWord.length > 1 && curWord[0] == "(" ? curWord.substring(1) : curWord;
-                if(curWord){
-                    intellisense.check(curWord, objectData, el);
-                }else{
-                    intellisense.hide();
-                }
-            })
+            intellisenseCheck(el);
         }
         
     }else{

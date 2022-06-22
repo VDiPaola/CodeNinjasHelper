@@ -21,6 +21,8 @@ const genericProperties = {
     toggleVisible: "toggleVisible()",
     toggleDraggable: "toggleDraggable()",
     rotation: "rotation([cursor])",
+    togglePause: "togglePause()"
+
 }
 
 export const ObjectDictionary = {

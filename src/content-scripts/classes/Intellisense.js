@@ -105,27 +105,36 @@ export class Intellisense {
     check = (curWord, objectData, textAreaEl) => {
         this.hide();
 
+        if(objectData.word){
+            this.lastObject = objectData;
+        }
 
-        if(!objectData.word){
+        const lastDotIndex = curWord.lastIndexOf('.');
+        
+        if(lastDotIndex  === -1 || !this.lastObject){
             //lookup word in dictionary
             const keys = Object.keys(Dictionary);
             for(let key of keys){
+                //check that key starts with current word
                 let startsWith = this.caseSensitive ? key.startsWith(curWord) : key.toLowerCase().startsWith(curWord.toLowerCase());
-                if(startsWith){
-                    const value = this.filterDictValue(Dictionary[key]);
-                    if(!curWord.includes(value)){
-                        this.append(key, curWord.length, textAreaEl);
-                    }
+                if(startsWith && key.length > curWord.length){
+                    this.append(key, curWord.length, textAreaEl);
                 }
             }
         }else{
+            //get property text
+            const curProperty = curWord.slice(lastDotIndex+1)
+            
             //lookup word in object dictionary (word, type, displayType)
-            const keys = Object.keys(objectData);
+            const keys = Object.keys(this.lastObject);
             for(const objectDataKeys of keys){
-                const objectKey = objectData[objectDataKeys];
+                const objectKey = this.lastObject[objectDataKeys];
                 if(ObjectDictionary.hasOwnProperty(objectKey)){
                     for(let key of Object.keys(ObjectDictionary[objectKey]) ){
-                        this.append(key, 0, textAreaEl, objectKey);
+                        const startsWith = this.caseSensitive ? key.startsWith(curProperty) : key.toLowerCase().startsWith(curProperty.toLowerCase());
+                        if(curProperty.length <= 0 || startsWith && key.length > curProperty.length){
+                            this.append(key, curProperty.length, textAreaEl, objectKey);
+                        }
                     }
                 }
             }
@@ -182,6 +191,7 @@ export class Intellisense {
             //get text without key in it
             const inputLength = parseInt(el.getAttribute("inputLength"));
 	        text = text.slice(inputLength);
+            //insert text
             Editor.insertText(text)
         }
         
