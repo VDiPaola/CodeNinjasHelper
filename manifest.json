@@ -1,7 +1,7 @@
 {
     "manifest_version": 3,
     "name": "Dojo Helper",
-    "version": "1.5.0",
+    "version": "1.8.0",
     "description": "Made to add functionality and fix bugs on a specified website",
     "icons":{
         "128": "icon.png",

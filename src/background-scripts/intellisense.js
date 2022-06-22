@@ -111,8 +111,13 @@ function getIntellisenseData(){
   const line = editor.session.getTextRange(new Range(range.row, 0, range.row, range.column));
   //get current word without tabs
   //const tab = editor.session.getTabString();
-  const curWord = line.slice(line.lastIndexOf(" ") + 1).trim();
-  const cursorPos = editor.selection.getCursor();
+  let curWord = line.slice(line.lastIndexOf(" ") + 1).trim();
+
+  //get word after opening bracket if one exists
+  const lastIndexOf = curWord.lastIndexOf("(");
+  if(lastIndexOf !== -1 && lastIndexOf !== curWord.length-1){
+    curWord = curWord.slice(lastIndexOf+1);
+  }
 
   //if word ends in a period, check if object
   let objectData = {};

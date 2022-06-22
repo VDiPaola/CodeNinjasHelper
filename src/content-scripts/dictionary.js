@@ -31,8 +31,8 @@ export const ObjectDictionary = {
         ...genericProperties,
     },
     GO_SCENE:{
-        stopCode: "stopCode()",
         state: "state()",
+        stopCode: "stopCode()",
     },
     STAR:{
         numPoints: "numPoints([cursor])",
