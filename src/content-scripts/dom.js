@@ -55,7 +55,6 @@ if(window.location.pathname.includes("/students/cn-cambridge-cam-uk/")){
 
     //insert error div
     waitForElement("#events").then(el => {
-        //elementBuilder("div", {className: "alert alert-danger position-absolute w-100 top-50", textContent: "The game is running"}, el);
-        el.innerHTML += '<div class="alert alert-danger text-center" data-bind="visible: $root.scene().state() == Scene.STATE_PLAY" style="position:absolute;width:97.5%;top:50%;z-index:1000">The game is running</div>'
+        el.innerHTML += '<div data-bind="visible: $root.scene().state() == Scene.STATE_PLAY, " style="position:absolute;width:97.5%;bottom:0;height:90%;z-index:1000;cursor:not-allowed"></div>'
     })
 }

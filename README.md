@@ -12,7 +12,7 @@ npm run build
 
 ## Publishing
 - make sure you have ran npm run build
-- set version in package.json
+- set version in manifest.json
 - push to github
 - npm run publish or zip correct files and folders (can check the publish command in package.json)
 
