@@ -4,6 +4,8 @@ export const Dictionary = {
 	function: "function ([cursor]) {\n\n}",
     isKeyPressed: "isKeyPressed(Keys.[cursor])",
     createTimer: "createTimer(1000,function() {\n[cursor]\n})",
+    getMouseX: "getMouseX()",
+    getMouseY: "getMouseY()",
 }
 
 const genericProperties = {
@@ -21,8 +23,17 @@ const genericProperties = {
     toggleVisible: "toggleVisible()",
     toggleDraggable: "toggleDraggable()",
     rotation: "rotation([cursor])",
-    togglePause: "togglePause()"
-
+    moveX: "moveX()",
+    moveY: "moveY()",
+    flipDirection: "flipDirection()",
+    findDistance: "findDistance([highlightStart]object[highlightEnd])",
+    getStagePos: "getStagePos()",
+    moveForwardByRotation: "moveForwardByRotation()",
+    findDistance: "findDistance([highlightStart]object[highlightEnd])",
+    moveTo: "moveTo([highlightStart]x,y[highlightEnd])",
+    moveToObject: "moveTo([highlightStart]object[highlightEnd])",
+    fill: "fill([cursor])",
+    
 }
 
 export const ObjectDictionary = {
@@ -35,6 +46,13 @@ export const ObjectDictionary = {
     GO_SCENE:{
         state: "state()",
         stopCode: "stopCode()",
+        togglePause: "togglePause()",
+        findName: "findName([cursor])",
+        findRoles: "findRoles([cursor])",
+    },
+    GO_SPRITE:{
+        incrementAnimation: "incrementAnimation()",
+        frameIndex: "frameIndex([cursor])",
     },
     STAR:{
         numPoints: "numPoints([cursor])",

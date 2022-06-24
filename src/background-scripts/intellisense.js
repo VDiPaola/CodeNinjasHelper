@@ -33,20 +33,38 @@ function insertText({value}){
 
   //insert text with correct indentation
   const lines = value.split("\n");
-  let cursorCol = 0;
-  let cursorRow = 0;
+  let cursorCol = null;
+  let cursorRow = null;
+
+  let highlightEndRow = null;
+  let highlightEndCol = null;
+  const tagCheck = (tagName, line, index) => {
+    //get cursor position and remove from string
+    let col = line.indexOf(tagName);
+    if(index === 0) {col += editor.selection.getCursor().column;}
+    //adds 1 assumes it needs to tab out (fix this)
+    else{col += (tabCounter+1) * tabSize;}
+    let row = lines.length - 2 - index;
+    line = line.replace(tagName, "")
+    return {line, col, row}
+  }
   lines.forEach((line, index) => {
     line = line.replace("[tab]", tabChar);
 
-    if(line.includes("[cursor]")) {
-      //get cursor position and remove from string
-      cursorCol = line.indexOf("[cursor]");
-      if(index === 0) {cursorCol += editor.selection.getCursor().column;}
-      //adds 1 assumes it needs to tab out (fix this)
-      else{cursorCol += (tabCounter+1) * tabSize;}
-      cursorRow = lines.length - 2 - index;
-      line = line.replace("[cursor]", "");
+    if(line.includes("[cursor]") || line.includes("[highlightStart]")) {
+      let res = tagCheck(line.includes("[cursor]") ? "[cursor]" : "[highlightStart]", line, index);
+      line = res.line;
+      cursorCol = res.col;
+      cursorRow = res.row;
     }
+    if(line.includes("[highlightEnd]")){
+      res = tagCheck("[highlightEnd]", line, index);
+      line = res.line;
+      highlightEndCol = res.col;
+      highlightEndRow = res.row;
+    }
+
+    
 
     //insert text
     if(index === 0){
@@ -57,10 +75,16 @@ function insertText({value}){
     }
   });
 
-  if(cursorRow !== 0 && cursorCol !== 0){
+  const curRow = editor.selection.getCursor().row
+  if(cursorRow && cursorCol){
     //set cursor position
-    const cursorLine = editor.selection.getCursor().row - cursorRow;
+    const cursorLine = curRow - cursorRow;
     editor.gotoLine(cursorLine, cursorCol, true);
+  }
+  if(highlightEndRow && highlightEndCol){
+    //highlight to end
+    const cursorLine = curRow - highlightEndRow;
+    editor.selection.selectTo(cursorLine-1, highlightEndCol);
   }
   
   
@@ -228,15 +252,15 @@ function setCommandBindingsOn({value}){
 }
 
 function checkBrackets(){
-  //if even number of brackets then move cursor 1 to the right
+  //skip bracket if closing is next
   const editor = window.ace.edit("ws");
-  //get current line
-  const line = editor.session.getLine(editor.selection.getCursor().row);
-  //get number of brackets
-  const openBrackets = line.match(/\(/g);
-  const closedBrackets = line.match(/\)/g);
+  const Range = window.ace.require("ace/range").Range;
 
-  if(openBrackets?.length === closedBrackets?.length){
+  const cursor = editor.selection.getCursor();
+  //get all text up to cursor
+  const text = editor.session.getTextRange(new Range(cursor.row, cursor.column, cursor.row, cursor.column+1));
+
+  if(text == ")"){
     //move cursor by 1
     editor.selection.moveCursorBy(0, 1);
   }else{

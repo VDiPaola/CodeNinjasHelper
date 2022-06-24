@@ -55,8 +55,8 @@ export class Intellisense {
 
     updateScroll(){
         //update scroll
-        this.container.scrollTop = this.container.children[this.currentlySelectedIndex].getBoundingClientRect().top - 
-        (this.container.children[this.currentlySelectedIndex].offsetHeight * 3) - this.container.getBoundingClientRect().top;
+        this.container.scrollTop = (this.currentlySelectedIndex *  this.container.children[this.currentlySelectedIndex].getBoundingClientRect().height) - 
+            this.container.children[this.currentlySelectedIndex].getBoundingClientRect().height
     }
 
     updateSelected(){
@@ -117,7 +117,7 @@ export class Intellisense {
             for(let key of keys){
                 //check that key starts with current word
                 let startsWith = this.caseSensitive ? key.startsWith(curWord) : key.toLowerCase().startsWith(curWord.toLowerCase());
-                if(startsWith && key.length > curWord.length){
+                if(startsWith && key.length >= curWord.length){
                     this.append(key, curWord.length, textAreaEl);
                 }
             }
@@ -132,7 +132,7 @@ export class Intellisense {
                 if(ObjectDictionary.hasOwnProperty(objectKey)){
                     for(let key of Object.keys(ObjectDictionary[objectKey]) ){
                         const startsWith = this.caseSensitive ? key.startsWith(curProperty) : key.toLowerCase().startsWith(curProperty.toLowerCase());
-                        if(curProperty.length <= 0 || startsWith && key.length > curProperty.length){
+                        if(curProperty.length <= 0 || startsWith && key.length >= curProperty.length){
                             this.append(key, curProperty.length, textAreaEl, objectKey);
                         }
                     }
