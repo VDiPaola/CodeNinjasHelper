@@ -30,12 +30,17 @@ const Object_General = `
     <div class="row">
         <div class="col-xs-6"><span class="panel-heading-title">General Info</span> (<span data-bind="text: selectedObject().slug"></span>)</div>
         <div class="col-xs-6 text-right padding-right-6">
+
+            <span class="margin-right-2" href="#" data-bind="visible: (mode() != Scene.MODE_EDIT && state() == Scene.STATE_PLAY), click:()=>{customClone(selectedObject())}"><i class="fa fa-2x fa-copy"></i></span>
+            <a class="margin-right-2" href="#" data-bind="visible: (mode() == Scene.MODE_EDIT || state() == Scene.STATE_STOP), click:()=>{customClone(selectedObject())}"><i class="fa fa-2x fa-copy"></i></a>
+
             <span class="margin-right-2" href="#" data-bind="visible: selectedObject().isAsset() && (mode() != Scene.MODE_EDIT && state() == Scene.STATE_PLAY)"><i class="fa fa-2x fa-chain-broken" data-bind=""></i></span>
             <a class="margin-right-2" href="#" data-bind="visible: selectedObject().isAsset() && (mode() == Scene.MODE_EDIT || state() == Scene.STATE_STOP), click:disconnectFromAsset"><i class="fa fa-2x fa-chain-broken" data-bind=""></i></a>
 
             <span class="margin-right-2" href="#" data-bind="visible: selectedObject().isAsset() && (mode() != Scene.MODE_EDIT && state() == Scene.STATE_PLAY)"><i class="fa fa-2x fa-cloud-download" data-bind=""></i></span>
             <a class="margin-right-2" href="#" data-bind="visible: selectedObject().isAsset() && (mode() == Scene.MODE_EDIT || state() == Scene.STATE_STOP), click:loadAsset"><i class="fa fa-2x fa-cloud-download" data-bind=""></i></a>
 
+            
             <a class="margin-right-2" href="#" data-bind="visible: selectedObject().isAsset != null && scene.mode() == 'EDIT', click:saveAsset"><i class="fa fa-2x fa-cloud-upload" data-bind=""></i></a>
 
             <span class="margin-right-2" href="#" data-bind="visible: selectedObject().isPlaying != null && (mode() != Scene.MODE_EDIT && state() == Scene.STATE_PLAY)"><i class="fa fa-2x" data-bind="css: { 'fa-pause': selectedObject().isPlaying && selectedObject().isPlaying(), 'fa-play': selectedObject().isPlaying && !selectedObject().isPlaying() }"></i></span>
@@ -111,7 +116,11 @@ const Object_General = `
         </div>
         <div class="form-group" data-bind="visible : selectedObject().parent != null">
             <label class="">Parent</label>
-            <span type="number" data-bind="text : selectedObject().parent == null ? 'none' : selectedObject().parent.name" />
+            <select name="parent" id="parentSelect" data-bind="html : scene.getParents, value : scene.selectedParentId" onchange="((v)=>{
+                let parent = viewModel.scene().getObjectById(v);
+                let val = viewModel.scene().changeParent(viewModel.scene().selectedObject(), parent);
+                this.value = val;
+            })(this.value)" ></select>
         </div>
         <div class="form-group" data-bind="visible : selectedObject().width != null">
             <label class="">Width</label>
