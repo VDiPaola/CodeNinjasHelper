@@ -11,6 +11,11 @@ function setValue({value, cursorPosition, resetUndoHistory=false}){
   
 }
 
+function rawInsertText({value}){
+  const editor = window.ace.edit("ws");
+  editor.insert(value);
+}
+
 function insertText({value}){
   //inserts text as if user typed it
   const editor = window.ace.edit("ws");
@@ -324,6 +329,8 @@ export default class Intellisense{
         return getUseWrapMode;
       case "checkBrackets":
         return checkBrackets;
+      case "rawInsertText":
+        return rawInsertText;
     }
     
   }

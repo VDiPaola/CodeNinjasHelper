@@ -11,7 +11,8 @@
 
     "permissions": [
         "scripting",
-        "storage"
+        "storage",
+        "contextMenus"
     ],
 
     "background":{

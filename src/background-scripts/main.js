@@ -4,26 +4,10 @@ import Dom from "./dom.js";
 import Scene from "./scene.js";
 import CodeTreks from "./codetreks.js";
 
-//executes function in main 'world'
-async function execScript(tabId, func, args=[]) {
-    const [{result}] = await chrome.scripting.executeScript({
-      func,
-      args,
-      target: {
-        tabId: tabId ??
-          (await chrome.tabs.query({active: true, currentWindow: true}))[0].id
-      },
-      world: 'MAIN',
-    });
-    return result;
-}
+import "./contextMenu/context.js"
 
-//gets current tab
-async function getCurrentTab() {
-    let queryOptions = { active: true, currentWindow: true };
-    let [tab] = await chrome.tabs.query(queryOptions);
-    return tab;
-}
+import {getCurrentTab, execScript} from './helpers.js'
+
 
 chrome.runtime.onMessage.addListener((data, sender, sendResponse) => {
     if (data.type === "intellisense") {

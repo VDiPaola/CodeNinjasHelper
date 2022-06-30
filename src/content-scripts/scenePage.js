@@ -40,4 +40,5 @@ class CodeTreks{
 if(window.location.pathname.includes("/Scenes/Play/")){
     const scene = new Scene();
     const codeTreks = new CodeTreks();
+
 }
