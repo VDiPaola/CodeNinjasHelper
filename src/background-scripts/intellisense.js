@@ -245,6 +245,23 @@ function initFunc(){
       }
     }
   }
+
+  //font size
+  $('#editor-decrement-font').off('click');
+  $('#editor-increment-font').off('click');
+  const fontMin = 12;
+  const fontMax = 48;
+  editor.setFontSize(24);
+  window.codeNinjasHelper.fontSize = ko.observable(24)
+  window.codeNinjasHelper.fontSize.subscribe((size)=>{
+      size = size > fontMax ? fontMax : size;
+      size = size < fontMin ? fontMin : size;
+      editor.setFontSize(size)
+      window.codeNinjasHelper.fontSize(size)
+  })
+  $('#editor-decrement-font').on('click', () => window.codeNinjasHelper.fontSize(window.codeNinjasHelper.fontSize()-2));
+  $('#editor-increment-font').on('click', () => window.codeNinjasHelper.fontSize(window.codeNinjasHelper.fontSize()+2));
+
 }
 
 function setCommandBindingsOn({value}){
