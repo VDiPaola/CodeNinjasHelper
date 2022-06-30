@@ -27,6 +27,17 @@ class Scene{
     }
 }
 
+class CodeTreks{
+    constructor(){
+        this.#subscribeKeyDown();
+    }
+
+    #subscribeKeyDown(){
+        chrome.runtime.sendMessage({type:"codetreks", message:"subscribeKeyDown"});
+    }
+}
+
 if(window.location.pathname.includes("/Scenes/Play/")){
     const scene = new Scene();
+    const codeTreks = new CodeTreks();
 }

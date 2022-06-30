@@ -2,6 +2,7 @@
 import Intellisense from "./intellisense.js";
 import Dom from "./dom.js";
 import Scene from "./scene.js";
+import CodeTreks from "./codetreks.js";
 
 //executes function in main 'world'
 async function execScript(tabId, func, args=[]) {
@@ -52,6 +53,17 @@ chrome.runtime.onMessage.addListener((data, sender, sendResponse) => {
         getCurrentTab().then(tab => {
             if(tab && data.message){
                 const func = Scene.onMessage(data.message);
+                if(func){
+                    execScript(tab.id, func, [data]);
+                }
+                
+            }
+        })
+    }else if (data.type === "codetreks") {
+        //get method
+        getCurrentTab().then(tab => {
+            if(tab && data.message){
+                const func = CodeTreks.onMessage(data.message);
                 if(func){
                     execScript(tab.id, func, [data]);
                 }

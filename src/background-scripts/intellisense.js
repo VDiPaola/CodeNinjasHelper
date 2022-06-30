@@ -74,12 +74,11 @@ function insertText({value}){
     }
   });
 
-  alert(cursorCol)
+
   const curRow = editor.selection.getCursor().row
   if(cursorRow != null && cursorCol != null){
     //set cursor position
     const cursorLine = curRow - cursorRow;
-    alert(cursorLine)
     editor.gotoLine(cursorLine, cursorCol, true);
   }
   if(highlightEndRow != null && highlightEndCol != null){
@@ -174,7 +173,7 @@ function getIntellisenseData(){
     objectData.displayType = objectData.displayType === curWordNoPeriod ? null : objectData.displayType;
 
     objectData.type = curObject?.data?.type || null;
-    objectData.type = objectData.type == "GO_TEXT" ? "LABEL" : objectData.type;
+    objectData.type = objectData.type == "LABEL" ? "GO_TEXT" : objectData.type;
     objectData.type = curObject?.data?.type == objectData.displayType ? null : objectData.type;
     objectData.type = objectData.type === curWordNoPeriod ? null : objectData.type;
   }

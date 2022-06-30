@@ -7,7 +7,8 @@ export const Dictionary = {
     getMouseX: "getMouseX()",
     getMouseY: "getMouseY()",
     moveX: "moveX([highlightStart]object, speed[highlightEnd])",
-    moveY: "moveY([highlightStart]object, speed[highlightEnd])"
+    moveY: "moveY([highlightStart]object, speed[highlightEnd])",
+    getPointerPos: "getPointerPos()"
 }
 
 const genericProperties = {
@@ -50,7 +51,7 @@ export const ObjectDictionary = {
     },
     GO_TEXT:{
         ...genericProperties,
-        text: "text([cursor])"
+        text: 'text("[cursor]")'
     },
     GO_SCENE:{
         state: "state()",
