@@ -81,7 +81,7 @@ function subscribeChanges(){
         allObjects.push(...scene.allChildren(scene.objects()).filter(o => o?.type() == "GO_GROUP"))
         for (let object of allObjects) {
             if(object != obj && !allChildren.includes(object)){
-              const name = object.name() //|| `new ${object.type()}`
+              const name = object.name()
               option = `<option value='${object.id}'>${name}</option>`
               if (!parents.includes(option)) parents.push(option) 
             }
@@ -111,6 +111,13 @@ function subscribeChanges(){
         }
       }
 
+      //PAUSE
+      scene.pause = ()=>{
+        scene._onFramesPerSecondChanged(0.0000000000001)
+        scene.cleanupTimers()
+      }
+
+      
 
       //MULTI SELECT WIP
       // let selectedObjects = []

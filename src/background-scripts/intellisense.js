@@ -48,6 +48,7 @@ function insertText({value}){
     line = line.replace(tagName, "")
     return {line, col, row}
   }
+
   lines.forEach((line, index) => {
     line = line.replace("[tab]", tabChar);
 
@@ -64,8 +65,6 @@ function insertText({value}){
       highlightEndRow = res.row;
     }
 
-    
-
     //insert text
     if(index === 0){
       editor.insert(line);
@@ -75,13 +74,15 @@ function insertText({value}){
     }
   });
 
+  alert(cursorCol)
   const curRow = editor.selection.getCursor().row
-  if(cursorRow && cursorCol){
+  if(cursorRow != null && cursorCol != null){
     //set cursor position
     const cursorLine = curRow - cursorRow;
+    alert(cursorLine)
     editor.gotoLine(cursorLine, cursorCol, true);
   }
-  if(highlightEndRow && highlightEndCol){
+  if(highlightEndRow != null && highlightEndCol != null){
     //highlight to end
     const cursorLine = curRow - highlightEndRow;
     editor.selection.selectTo(cursorLine-1, highlightEndCol);
