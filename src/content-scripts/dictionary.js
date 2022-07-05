@@ -61,6 +61,7 @@ export const ObjectDictionary = {
         findRoles: "findRoles([cursor])",
     },
     GO_SPRITE:{
+        ...genericProperties,
         incrementAnimation: "incrementAnimation()",
         frameIndex: "frameIndex([cursor])",
         animation: 'animation("[cursor]")'

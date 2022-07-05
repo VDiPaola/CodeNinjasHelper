@@ -58,6 +58,10 @@ export class Editor {
         return await this.sendMessage({message: "getCursor"});
     }
 
+    static async refresh(){
+        return await this.sendMessage({message: "refresh"});
+    }
+
     static async sendMessage(data){
         data = {type:"intellisense", ...data};
         return await chrome.runtime.sendMessage(data)

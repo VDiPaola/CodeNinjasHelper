@@ -112,7 +112,7 @@ const startIntellisense = () => {
             intellisense = new Intellisense();
             Editor.init();
         }
-        
+        Editor.refresh();
         inputElement.removeEventListener("keydown", inputEventListener);
         inputElement.addEventListener("keydown", inputEventListener);
 

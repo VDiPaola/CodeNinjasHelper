@@ -31,7 +31,10 @@ const Object_General = `
         <div class="col-xs-6"><span class="panel-heading-title">General Info</span> (<span data-bind="text: selectedObject().slug"></span>)</div>
         <div class="col-xs-6 text-right padding-right-6">
 
-            <span class="margin-right-2" href="#" data-bind="visible: (mode() != Scene.MODE_EDIT && state() == Scene.STATE_PLAY), click:()=>{customClone(selectedObject())}"><i class="fa fa-2x fa-copy"></i></span>
+        <span class="margin-right-2" href="#" data-bind="visible: (mode() != Scene.MODE_EDIT && state() == Scene.STATE_PLAY)"><i class="fa fa-2x fa-bullseye"></i></span>
+            <a class="margin-right-2" href="#" data-bind="visible: (mode() == Scene.MODE_EDIT || state() == Scene.STATE_STOP), click:()=>{let s=selectedObject();s.offsetX(s.width()/2);s.offsetY(s.height()/2)}"><i class="fa fa-2x fa-bullseye"></i></a>
+
+            <span class="margin-right-2" href="#" data-bind="visible: (mode() != Scene.MODE_EDIT && state() == Scene.STATE_PLAY)"><i class="fa fa-2x fa-copy"></i></span>
             <a class="margin-right-2" href="#" data-bind="visible: (mode() == Scene.MODE_EDIT || state() == Scene.STATE_STOP), click:()=>{customClone(selectedObject())}"><i class="fa fa-2x fa-copy"></i></a>
 
             <span class="margin-right-2" href="#" data-bind="visible: selectedObject().isAsset() && (mode() != Scene.MODE_EDIT && state() == Scene.STATE_PLAY)"><i class="fa fa-2x fa-chain-broken" data-bind=""></i></span>
@@ -204,6 +207,11 @@ const GO_Position = `
         </div>
     </div>
     <div class="form-group">
+            <input type="range" min="0" max="360" step="1" class="form-control"  data-bind="value : selectedObject().rotation" oninput="((v)=>{
+                viewModel.scene().selectedObject().rotation(v);
+            })(this.value)"/>
+    </div>
+    <div class="form-group">
         <div class="input-group">
             <label class="input-group-addon" title="This is the speed that the object travels in the X direction.">Speed X</label>
             <input type="number" class="form-control" data-bind="value : selectedObject().speedX" required />
@@ -278,10 +286,40 @@ const props_CIRCLE = `
 </div>
 `
 
+const props_SHAPE = `
+<div class="panel panel-default margin-bottom-0 margin-top-0">
+<div class="panel-heading"><span class="panel-heading-title">General Shape</span></div>
+<div class="panel-body">
+    <div class="form-group">
+        <div><label>Background Color</label></div>
+        <input type="color" class="form-control" data-bind="value: selectedObject().fill" oninput="((v)=>{
+            viewModel.scene().selectedObject().fill(v);
+            this.value = v;
+        })(this.value)"/>
+    </div>
+    <div class="form-group">
+        <div><label>Stroke Color</label></div>
+        <input type="color" class="form-control" data-bind="value: selectedObject().stroke" oninput="((v)=>{
+            viewModel.scene().selectedObject().stroke(v);
+            this.value = v;
+        })(this.value)"/>
+    </div>
+    <div class="form-group">
+        <div><label>Stroke Width: <span data-bind="text: selectedObject().strokeWidth">0</span></label></div>
+        <input type="range" step="1" min="0" max="20" class="form-control" data-bind="value: selectedObject().strokeWidth"  oninput="((v)=>{
+            viewModel.scene().selectedObject().strokeWidth(v);
+        })(this.value)"/>
+    </div>
+    
+</div>
+</div>
+`
+
 export const Elements = {
     props_STAR,
     Object_General,
     GO_Position,
     "object-row": objectRow,
     props_CIRCLE,
+    props_SHAPE
 }

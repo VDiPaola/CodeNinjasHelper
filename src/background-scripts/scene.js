@@ -62,7 +62,7 @@ function subscribeChanges(){
         //get original parent
         let ogParent = child.parent;
         //make sure new parent is valid type
-        if (ogParent != parent && (parent.type() == "GO_SCENE" || parent.type() == "GO_GROUP")){
+        if (ogParent.id != parent.id && (parent.type() == "GO_SCENE" || parent.type() == "GO_GROUP")){
           //consider doing the child check here aswell but doesnt seem necesary 
           parent.addChild(child);
           ogParent.objects.remove(child);
@@ -88,10 +88,6 @@ function subscribeChanges(){
         }
 
         return parents
-      })
-      scene.selectedTest = ko.computed(()=>{
-        let obj = scene.selectedObject()
-        return obj.parent != null ? obj.parent.id:0
       })
 
       //GET CURRENT OBJECTS PARENT ID

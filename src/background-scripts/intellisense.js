@@ -213,6 +213,7 @@ function getCurrentWord(){
 
 function setTheme({value}){
   const editor = window.ace.edit("ws");
+  window.codeNinjasHelper.theme = value;
   editor.setTheme(value);
 }
 
@@ -233,13 +234,14 @@ function setTabSize({value}){
 }
 
 function initFunc(){
+  if(window.codeNinjasHelper) return;
   const editor = window.ace.edit("ws");
   //get keybindings to override
   const keyBindings = editor.commands.commandKeyBinding;
   const keyBindingKeys = ["up", "down", "tab"];
 
   //set default object for options
-  window.codeNinjasHelper = {commandBindingsOn: true};
+  window.codeNinjasHelper = {commandBindingsOn: true, theme:"ace/theme/monokai"};
 
   //override exec function of command keybindings
   for (let key of keyBindingKeys){
@@ -252,21 +254,30 @@ function initFunc(){
   }
 
   //font size
-  $('#editor-decrement-font').off('click');
-  $('#editor-increment-font').off('click');
   const fontMin = 12;
   const fontMax = 48;
   editor.setFontSize(24);
   window.codeNinjasHelper.fontSize = ko.observable(24)
   window.codeNinjasHelper.fontSize.subscribe((size)=>{
+      const editor = window.ace.edit("ws");
       size = size > fontMax ? fontMax : size;
       size = size < fontMin ? fontMin : size;
       editor.setFontSize(size)
       window.codeNinjasHelper.fontSize(size)
   })
-  $('#editor-decrement-font').on('click', () => window.codeNinjasHelper.fontSize(window.codeNinjasHelper.fontSize()-2));
-  $('#editor-increment-font').on('click', () => window.codeNinjasHelper.fontSize(window.codeNinjasHelper.fontSize()+2));
 
+}
+
+function refresh(){
+  if(window.codeNinjasHelper){
+    const editor = window.ace.edit("ws");
+    editor.setFontSize(window.codeNinjasHelper.fontSize());
+    $('#editor-decrement-font').off('click');
+    $('#editor-increment-font').off('click');
+    $('#editor-decrement-font').on('click', () =>  window.codeNinjasHelper.fontSize(window.codeNinjasHelper.fontSize()-2));
+    $('#editor-increment-font').on('click', () =>  window.codeNinjasHelper.fontSize(window.codeNinjasHelper.fontSize()+2));
+    editor.setTheme(window.codeNinjasHelper.theme);
+  }
 }
 
 function setCommandBindingsOn({value}){
@@ -331,6 +342,8 @@ export default class Intellisense{
         return checkBrackets;
       case "rawInsertText":
         return rawInsertText;
+      case "refresh":
+        return refresh;
     }
     
   }
