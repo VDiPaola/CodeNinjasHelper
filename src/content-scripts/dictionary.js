@@ -46,6 +46,9 @@ export const ObjectDictionary = {
     GO_SHAPE:{
         ...genericProperties,
     },
+    GO_IMAGE:{
+        ...genericProperties,
+    },
     GO_GROUP:{
         ...genericProperties,
     },
