@@ -103,8 +103,11 @@ if ($this.isTouching(bins)) {
         
     }
     $this.remove()
-}
-    `
+}`,
+
+    "Freeze Frame":`
+$this.scene._onFramesPerSecondChanged(0.0000000000001);
+$this.scene.cleanupTimers();`
 }
 
 export default Dictionary;

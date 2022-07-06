@@ -107,12 +107,6 @@ function subscribeChanges(){
         }
       }
 
-      //PAUSE
-      scene.pause = ()=>{
-        scene._onFramesPerSecondChanged(0.0000000000001)
-        scene.cleanupTimers()
-      }
-
       
 
       //MULTI SELECT WIP

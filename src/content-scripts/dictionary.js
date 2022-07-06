@@ -56,7 +56,6 @@ export const ObjectDictionary = {
     GO_SCENE:{
         state: "state()",
         stopCode: "stopCode()",
-        pause: "pause()",
         findName: "findName([cursor])",
         findRoles: "findRoles([cursor])",
     },
